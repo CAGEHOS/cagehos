@@ -170,7 +170,7 @@
         <Component class="javax.swing.JButton" name="jButton2">
           <Properties>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="2" name="C:\Users\Dias\Documents\login12.png"/>
+              <Image iconType="3" name="/cagehos/gui/login12.png"/>
             </Property>
           </Properties>
           <Events>
@@ -182,7 +182,7 @@
     <Component class="javax.swing.JLabel" name="jLabel6">
       <Properties>
         <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-          <Image iconType="2" name="C:\Users\Dias\Documents\bannerInicio.png"/>
+          <Image iconType="3" name="/cagehos/gui/bannerInicio.png"/>
         </Property>
       </Properties>
     </Component>
