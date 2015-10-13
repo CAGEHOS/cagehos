@@ -189,9 +189,7 @@ public class Inicio extends javax.swing.JFrame {
     }//GEN-LAST:event_jTextField1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-          // JOptionPane.showMessageDialog(null, "Senha Incorreta!");
-        JFileChooser fileChooser = new JFileChooser();
-        fileChooser.showOpenDialog(null);
+        
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void formComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentResized
