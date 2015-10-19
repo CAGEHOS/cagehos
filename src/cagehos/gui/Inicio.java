@@ -5,7 +5,10 @@
  */
 package cagehos.gui;
 
-import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+
+
+
 
 /**
  *
@@ -52,7 +55,6 @@ public class Inicio extends javax.swing.JFrame {
         setBackground(new java.awt.Color(170, 178, 234));
         setBounds(new java.awt.Rectangle(0, 0, 0, 0));
         setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        setPreferredSize(new java.awt.Dimension(705, 483));
         setSize(new java.awt.Dimension(705, 0));
         addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
@@ -98,6 +100,11 @@ public class Inicio extends javax.swing.JFrame {
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton2ActionPerformed(evt);
+            }
+        });
+        jButton2.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                jButton2KeyPressed(evt);
             }
         });
 
@@ -189,7 +196,9 @@ public class Inicio extends javax.swing.JFrame {
     }//GEN-LAST:event_jTextField1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        
+        Central_princ central = new Central_princ();
+        central.setVisible(true);
+        dispose();
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void formComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentResized
@@ -209,6 +218,10 @@ public class Inicio extends javax.swing.JFrame {
     private void formComponentMoved(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentMoved
        
     }//GEN-LAST:event_formComponentMoved
+
+    private void jButton2KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jButton2KeyPressed
+        
+    }//GEN-LAST:event_jButton2KeyPressed
 
     /**
      * @param args the command line arguments
