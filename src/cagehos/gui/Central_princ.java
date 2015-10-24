@@ -7,6 +7,7 @@ package cagehos.gui;
 
 import java.io.File;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -87,13 +88,13 @@ public class Central_princ extends javax.swing.JFrame {
             wallpaperLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(wallpaperLayout.createSequentialGroup()
                 .addGap(0, 0, 0)
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 829, Short.MAX_VALUE))
         );
         wallpaperLayout.setVerticalGroup(
             wallpaperLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(wallpaperLayout.createSequentialGroup()
                 .addGap(0, 0, 0)
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 440, Short.MAX_VALUE)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 462, Short.MAX_VALUE)
                 .addGap(0, 0, 0))
         );
 
@@ -285,7 +286,7 @@ public class Central_princ extends javax.swing.JFrame {
         );
         listAllLayout.setVerticalGroup(
             listAllLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 418, Short.MAX_VALUE)
+            .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 451, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout centralViewLayout = new javax.swing.GroupLayout(centralView);
@@ -307,11 +308,10 @@ public class Central_princ extends javax.swing.JFrame {
             .addGroup(centralViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(centralViewLayout.createSequentialGroup()
                     .addContainerGap()
-                    .addComponent(listAll, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addContainerGap()))
+                    .addComponent(listAll, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
 
-        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Opções de Cadastro", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 12))); // NOI18N
+        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Cadastro", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 12))); // NOI18N
 
         jButton1.setText("Novo");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -328,6 +328,11 @@ public class Central_princ extends javax.swing.JFrame {
         });
 
         jButton3.setText("Buscar");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
 
         jButton4.setText("Home");
         jButton4.addActionListener(new java.awt.event.ActionListener() {
@@ -483,12 +488,14 @@ public class Central_princ extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
-            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                .addGap(115, 115, 115)
-                .addComponent(centralView, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(10, 10, 10))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addContainerGap())
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(105, 105, 105)
+                        .addComponent(centralView, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(10, 10, 10))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -497,10 +504,11 @@ public class Central_princ extends javax.swing.JFrame {
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(centralView, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+                .addGap(10, 10, 10))
         );
 
         centralView.getAccessibleContext().setAccessibleName("");
+        jPanel2.getAccessibleContext().setAccessibleName("CADASTRO");
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -552,7 +560,27 @@ public class Central_princ extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem7ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-       
+       String[] options = new String[] { "Paciente", "Médico", "Empregado" };  
+        Object ret = JOptionPane.showOptionDialog(null, "Selecione o tipo de cadastro.", "Opções de Cadastro", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]); 
+        System.out.println(options[Integer.valueOf(ret.toString())]);
+        
+        if (null != options[Integer.valueOf(ret.toString())])switch (options[Integer.valueOf(ret.toString())]) {
+            case "Paciente":
+                CadastroPaciente paciente = new CadastroPaciente();
+                paciente.setVisible(true);
+                break;
+            case "Médico":
+                CadastroMedico medico = new CadastroMedico();
+                medico.setVisible(true);
+                break;
+            case "Empregado":
+                CadastroEmpregado empregado = new CadastroEmpregado();
+                empregado.setVisible(true);
+                break;
+        }
+        
+        
+        
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
@@ -573,6 +601,10 @@ public class Central_princ extends javax.swing.JFrame {
         wallpaper.setVisible(true);
         listAll.setVisible(false);
     }//GEN-LAST:event_jButton4ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        JOptionPane.showMessageDialog(null, "teste");
+    }//GEN-LAST:event_jButton3ActionPerformed
 
     /**
      * @param args the command line arguments
