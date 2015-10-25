@@ -105,7 +105,7 @@ public class Central extends javax.swing.JFrame {
         jToolBar1.add(jButton1);
 
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cagehos/img/wallpaper.png"))); // NOI18N
+        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cagehos/img/Teste-city3.png"))); // NOI18N
         jLabel1.setVerticalAlignment(javax.swing.SwingConstants.TOP);
 
         jMenu1.setText("File");
