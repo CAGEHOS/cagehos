@@ -79,7 +79,6 @@ public class Central_princ extends javax.swing.JFrame {
         });
 
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        jLabel1.setIcon(new javax.swing.ImageIcon("C:\\Users\\Dias\\Documents\\Projeto Java\\Teste-city3.png")); // NOI18N
         jLabel1.setVerticalAlignment(javax.swing.SwingConstants.TOP);
 
         javax.swing.GroupLayout wallpaperLayout = new javax.swing.GroupLayout(wallpaper);
@@ -88,13 +87,13 @@ public class Central_princ extends javax.swing.JFrame {
             wallpaperLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(wallpaperLayout.createSequentialGroup()
                 .addGap(0, 0, 0)
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 829, Short.MAX_VALUE))
+                .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 829, Short.MAX_VALUE))
         );
         wallpaperLayout.setVerticalGroup(
             wallpaperLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(wallpaperLayout.createSequentialGroup()
                 .addGap(0, 0, 0)
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 462, Short.MAX_VALUE)
+                .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 462, Short.MAX_VALUE)
                 .addGap(0, 0, 0))
         );
 
@@ -560,7 +559,7 @@ public class Central_princ extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem7ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-       String[] options = new String[] { "Paciente", "Médico", "Empregado" };  
+        String[] options = new String[] { "Paciente", "Médico", "Empregado" };  
         Object ret = JOptionPane.showOptionDialog(null, "Selecione o tipo de cadastro.", "Opções de Cadastro", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]); 
         System.out.println(options[Integer.valueOf(ret.toString())]);
         
