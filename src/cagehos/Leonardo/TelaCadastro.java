@@ -11,22 +11,30 @@ package cagehos.Leonardo;
  */
 public class TelaCadastro extends javax.swing.JFrame {
 
+    private static int fieldNumber;
+
     /**
      * Creates new form TelaCadastro
      * @param option
      */
     public TelaCadastro(int option) {
         initComponents();
+        //centraliza TelaCadastro, fica exatamente no centro da tela
         this.setLocationRelativeTo(null);
-        if (option == 0) {
+
+        
+        if (option == 0) {      
             pMedTab.setVisible(false);
             pPacTab.setVisible(false);
+            fieldNumber = 0;
         } else if (option == 1) {
             pFunTab.setVisible(false);
             pPacTab.setVisible(false);
+            fieldNumber = 1;
         } else if (option == 2) {
             pFunTab.setVisible(false);
             pMedTab.setVisible(false);
+            fieldNumber = 2;
         }
     }
 
@@ -39,7 +47,7 @@ public class TelaCadastro extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jTabbedPane2 = new javax.swing.JTabbedPane();
+        jTabbedPaneCadastro = new javax.swing.JTabbedPane();
         jPanel1 = new javax.swing.JPanel();
         jPanel5 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
@@ -121,7 +129,8 @@ public class TelaCadastro extends javax.swing.JFrame {
         jButton7 = new javax.swing.JButton();
         jButton8 = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setResizable(false);
 
         jPanel5.setBorder(javax.swing.BorderFactory.createTitledBorder("Dados Principais"));
 
@@ -415,6 +424,11 @@ public class TelaCadastro extends javax.swing.JFrame {
         jButton1.setPreferredSize(new java.awt.Dimension(100, 57));
         jButton1.setRequestFocusEnabled(false);
         jButton1.setRolloverEnabled(false);
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
         jPanel10.add(jButton1);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -443,7 +457,7 @@ public class TelaCadastro extends javax.swing.JFrame {
                 .addGap(10, 10, 10))
         );
 
-        jTabbedPane2.addTab("Dados Gerais", jPanel1);
+        jTabbedPaneCadastro.addTab("Dados Gerais", jPanel1);
 
         jPanel13.setBorder(javax.swing.BorderFactory.createTitledBorder("Dados do Médico"));
 
@@ -521,6 +535,11 @@ public class TelaCadastro extends javax.swing.JFrame {
 
         jButton4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cagehos/img/ic_done_black_48dp_1x.png"))); // NOI18N
         jButton4.setText("Concluir");
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
         jPanel18.add(jButton4);
 
         javax.swing.GroupLayout pMedTabLayout = new javax.swing.GroupLayout(pMedTab);
@@ -546,7 +565,7 @@ public class TelaCadastro extends javax.swing.JFrame {
                 .addGap(10, 10, 10))
         );
 
-        jTabbedPane2.addTab("Dados Funcionais", pMedTab);
+        jTabbedPaneCadastro.addTab("Dados Funcionais", pMedTab);
 
         jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder("Dados do Funcionário"));
 
@@ -622,6 +641,11 @@ public class TelaCadastro extends javax.swing.JFrame {
 
         jButton6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cagehos/img/ic_done_black_48dp_1x.png"))); // NOI18N
         jButton6.setText("Concluir");
+        jButton6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton6ActionPerformed(evt);
+            }
+        });
         jPanel19.add(jButton6);
 
         javax.swing.GroupLayout pFunTabLayout = new javax.swing.GroupLayout(pFunTab);
@@ -647,7 +671,7 @@ public class TelaCadastro extends javax.swing.JFrame {
                 .addGap(10, 10, 10))
         );
 
-        jTabbedPane2.addTab("Dados Funcionais", pFunTab);
+        jTabbedPaneCadastro.addTab("Dados Funcionais", pFunTab);
 
         jPanel15.setBorder(javax.swing.BorderFactory.createTitledBorder("Dados do Paciente"));
 
@@ -737,6 +761,11 @@ public class TelaCadastro extends javax.swing.JFrame {
 
         jButton8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cagehos/img/ic_done_black_48dp_1x.png"))); // NOI18N
         jButton8.setText("Concluir");
+        jButton8.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton8ActionPerformed(evt);
+            }
+        });
         jPanel20.add(jButton8);
 
         javax.swing.GroupLayout pPacTabLayout = new javax.swing.GroupLayout(pPacTab);
@@ -762,7 +791,7 @@ public class TelaCadastro extends javax.swing.JFrame {
                 .addGap(10, 10, 10))
         );
 
-        jTabbedPane2.addTab("Dados Hospitalares", pPacTab);
+        jTabbedPaneCadastro.addTab("Dados Hospitalares", pPacTab);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -770,16 +799,18 @@ public class TelaCadastro extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jTabbedPane2)
+                .addComponent(jTabbedPaneCadastro)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jTabbedPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 323, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jTabbedPaneCadastro, javax.swing.GroupLayout.PREFERRED_SIZE, 323, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(10, 10, 10))
         );
+
+        jTabbedPaneCadastro.getAccessibleContext().setAccessibleParent(jButton1);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -819,6 +850,43 @@ public class TelaCadastro extends javax.swing.JFrame {
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
         dispose();
     }//GEN-LAST:event_jButton7ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        if (fieldNumber == 0) {            
+            //após clicar em avançar, seleciona a aba número 3 
+            jTabbedPaneCadastro.setSelectedIndex(3);
+            
+            //desabilita as abas 1 e 2
+            jTabbedPaneCadastro.setEnabledAt( 2, false );
+            jTabbedPaneCadastro.setEnabledAt( 1, false );            
+        } else if (fieldNumber == 1) {            
+            //após clicar em avançar, seleciona a aba número 1
+            jTabbedPaneCadastro.setSelectedIndex(1);
+            
+            //desabilita as abas 2 e 3
+            jTabbedPaneCadastro.setEnabledAt( 2, false );
+            jTabbedPaneCadastro.setEnabledAt( 3, false );            
+        } else if (fieldNumber == 2) {
+            //após clicar em avançar, seleciona a aba número 2
+            jTabbedPaneCadastro.setSelectedIndex(2);
+            
+            //desabilita as abas 1 e 3
+            jTabbedPaneCadastro.setEnabledAt( 1, false );
+            jTabbedPaneCadastro.setEnabledAt( 3, false );
+        }
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        dispose();
+    }//GEN-LAST:event_jButton4ActionPerformed
+
+    private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
+        dispose();
+    }//GEN-LAST:event_jButton6ActionPerformed
+
+    private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
+        dispose();
+    }//GEN-LAST:event_jButton8ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -921,7 +989,7 @@ public class TelaCadastro extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JTabbedPane jTabbedPane2;
+    private javax.swing.JTabbedPane jTabbedPaneCadastro;
     private javax.swing.JTextArea jTextArea1;
     private javax.swing.JTextArea jTextArea2;
     private javax.swing.JTextArea jTextArea3;

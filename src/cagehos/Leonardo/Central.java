@@ -7,6 +7,7 @@ package cagehos.Leonardo;
 
 import javax.swing.JOptionPane;
 import cagehos.Leonardo.TelaCadastro;
+import java.awt.Component;
 
 /**
  *
@@ -144,13 +145,16 @@ public class Central extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        System.out.println("entrou no bottao");
+        
         String[] options = new String[] { "Paciente", "Médico", "Empregado" };  
         Object ret = JOptionPane.showOptionDialog(null, "Selecione o tipo de cadastro.", "Opções de Cadastro", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]); 
         System.out.println(options[Integer.valueOf(ret.toString())]);
-        
+     
+                
         if (null != options[Integer.valueOf(ret.toString())])switch (options[Integer.valueOf(ret.toString())]) {
             case "Paciente":
-                TelaCadastro paciente = new TelaCadastro(2);
+                TelaCadastro paciente = new TelaCadastro(0);
                 paciente.setVisible(true);
                 break;
             case "Médico":
@@ -158,8 +162,9 @@ public class Central extends javax.swing.JFrame {
                 medico.setVisible(true);
                 break;
             case "Empregado":
-                TelaCadastro empregado = new TelaCadastro(0);
+                TelaCadastro empregado = new TelaCadastro(2);
                 empregado.setVisible(true);
+                
                 break;
         }
     }//GEN-LAST:event_jButton2ActionPerformed
