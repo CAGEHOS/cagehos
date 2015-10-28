@@ -9,27 +9,12 @@ import cagehos.exc.InvalidAddressException;
 public class Address {
     private String addressName;
     private int addressNumber;
-    private int addressZipCode;
+    private String addressZipCode;
     private String addressDistrict;
     private String addressCity;
-    private String addressCountry;
     private String addressState;
-    
-    /**
-     * Returns the zip code formatted as "##.###-###".
-     * @param num The zip code to format.
-     * @return The zip code formatted as the description.
-     */
-    public static String formatZipCode(int num) {
-        final String numStr = Integer.toString(num);
-        
-        if (numStr.length() > 5) {
-            return numStr.substring(0, 2) + "." + numStr.substring(2, 5) + "-" + numStr.substring(5);
-        }
-        
-        return "00.000-000";
-    }
-    
+    private String addressComplement;
+
     /**
      * Creates the object Address with the information about someone's address.
      * @param name The address name.
@@ -60,11 +45,11 @@ public class Address {
      * @param district The district name.
      * @param city The city name.
      * @param state The state name.
-     * @param country The country name.
      * @param zipCode The zip code number.
+     * @param complement The address complement information.
      * @throws InvalidAddressException If any of the information was given using invalid characters or numbers.
      */
-    public Address(String name, int number, String district, String city, String state, String country, int zipCode) throws InvalidAddressException {
+    public Address(String name, int number, String district, String city, String state, String zipCode, String complement) throws InvalidAddressException {
         if (number <= 0) {
             throw new InvalidAddressException("Número de endereço inválido.");
         }
@@ -93,23 +78,13 @@ public class Address {
             throw new InvalidAddressException("Letras inválidas para o nome do estado. Utilize apenas letras.");
         }
         
-        if (country.length() == 0) {
-            throw new InvalidAddressException("País em branco.");
-        } else if (country.matches("[^a-zA-Z\\s]+")) {
-            throw new InvalidAddressException("Letras inválidas para o nome do país. Utilize apenas letras.");
-        }
-        
-        if (zipCode <= 0) {
-            throw new InvalidAddressException("CEP inválido.");
-        }
-        
         addressName = name;
         addressNumber = number;
         addressDistrict = district;
         addressCity = city;
         addressState = state;
-        addressCountry = country;
         addressZipCode = zipCode;
+        addressComplement = complement;
     }
     
     /**
@@ -129,7 +104,7 @@ public class Address {
         if (name.length() == 0) {
             throw new InvalidAddressException("Endereço em branco.");
         } else if (name.matches("[^a-zA-Z0-9\\s]+")) {
-            throw new InvalidAddressException("Letras inválidos para o nome do endereço. Utilize e/ou números.");
+            throw new InvalidAddressException("Letras inválidos para o nome do endereço. Utilize letras apenas.");
         }
         
         addressName = name;
@@ -203,46 +178,18 @@ public class Address {
     }
     
     /**
-     * Returns the current country name of the object.
-     * @return The current country name.
-     */
-    public String getCountryName() {
-        return addressCountry;
-    }
-    
-    /**
-     * Sets the new country name for the address object.
-     * @param country The new country name.
-     * @throws InvalidAddressException If the name contains invalid characters.
-     */
-    public void setCountryName(String country) throws InvalidAddressException {
-        if (country.length() == 0) {
-            throw new InvalidAddressException("País em branco.");
-        } else if (country.matches("[^a-zA-Z\\s]+")) {
-            throw new InvalidAddressException("Letras inválidas para o nome do País. Utilize apenas letras.");
-        }
-        
-        addressCountry = country;
-    }
-    
-    /**
      * Returns the current zip code number of the address object.
      * @return The current zip code.
      */
-    public int getZipCode() {
+    public String getZipCode() {
         return addressZipCode;
     }
     
     /**
      * Sets the new zip code for the address object.
      * @param zipCode The new zip code.
-     * @throws InvalidAddressException If the zip code is negative or equal to zero.
      */
-    public void setZipCode(int zipCode) throws InvalidAddressException {
-        if (zipCode <= 0) {
-            throw new InvalidAddressException("CEP inválido.");
-        }
-        
+    public void setZipCode(String zipCode) {
         addressZipCode = zipCode;
     }
     
@@ -270,6 +217,22 @@ public class Address {
     }
     
     /**
+     * Returns the current complement information about the address object.
+     * @return The complement information.
+     */
+    public String getComplement() {
+        return addressComplement;
+    }
+    
+    /**
+     * Sets the new complement information for the address object.
+     * @param complement The new complement information.
+     */
+    public void setComplement(String complement) {
+        addressComplement = complement;
+    }
+    
+    /**
      * Returns the address object information formatted in the brazilian postcard standards.
      * @return The address object formatted as a string.
      */
@@ -279,7 +242,7 @@ public class Address {
             addressName,
             addressNumber,
             addressDistrict,
-            formatZipCode(addressZipCode),
+            addressZipCode,
             addressCity,
             addressState);
     }

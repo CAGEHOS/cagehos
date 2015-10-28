@@ -8,7 +8,7 @@ import javax.naming.InvalidNameException;
  * @author Julio Ceron, Leonardo Falk
  */
 public class Employee extends Person {
-    private String profession;
+    private String profession, obs, workSection;
     
     /**
      * Creates the object Employee with information about the person.
@@ -37,5 +37,21 @@ public class Employee extends Person {
      */
     public void setProfession(String prof) {
         profession = prof;
+    }
+    
+    public String getObservations() {
+        return obs;
+    }
+    
+    public void setObservations(String newObs) {
+        obs = newObs;
+    }
+    
+    public void setWorkingSection(String section) {
+        workSection = section;
+    }
+    
+    public String getWorkingSection() {
+        return workSection;
     }
 }

@@ -9,7 +9,7 @@ import javax.naming.InvalidNameException;
  */
 public class Doctor extends Employee {
     private String treatment;
-    
+    private int crmID;
     /**
      * Creates the object Doctor with information about the person.
      * @param name The doctor's name.
@@ -37,5 +37,13 @@ public class Doctor extends Employee {
      */
     public String getTreatment() {
         return treatment;
+    }
+    
+    public void setCRM(int crmNumber) {
+        crmID = crmNumber;
+    }
+    
+    public int getCRM() {
+        return crmID;
     }
 }

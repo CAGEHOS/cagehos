@@ -6,8 +6,6 @@
 package cagehos.Leonardo;
 
 import javax.swing.JOptionPane;
-import cagehos.Leonardo.TelaCadastro;
-import java.awt.Component;
 
 /**
  *
@@ -35,7 +33,6 @@ public class Central extends javax.swing.JFrame {
         jToolBar1 = new javax.swing.JToolBar();
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
@@ -86,13 +83,6 @@ public class Central extends javax.swing.JFrame {
         jButton3.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         jToolBar1.add(jButton3);
 
-        jButton4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cagehos/img/ic_help_outline_black_48dp_1x.png"))); // NOI18N
-        jButton4.setToolTipText("Ajuda");
-        jButton4.setFocusable(false);
-        jButton4.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        jButton4.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        jToolBar1.add(jButton4);
-
         jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cagehos/img/ic_power_settings_new_black_48dp_1x.png"))); // NOI18N
         jButton1.setToolTipText("Encerrar o Programa");
         jButton1.setFocusable(false);
@@ -126,8 +116,8 @@ public class Central extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 268, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addGap(0, 1631, Short.MAX_VALUE))
+                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -141,31 +131,51 @@ public class Central extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        System.exit(0);
+        final String[] options = {"Sim", "Não"};
+        Object ret = JOptionPane.showOptionDialog(
+                null,
+                "Deseja encerrar a aplicação ?",
+                "Desligar",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                options,
+                options[1]
+        );
+        if ("Sim".equals(options[Integer.valueOf(ret.toString())])) {
+            System.exit(0);
+        }
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        System.out.println("entrou no bottao");
+        final String[] options = new String[] {"Paciente", "Médico", "Empregado"};  
+        Object ret = JOptionPane.showOptionDialog(
+                null,
+                "Selecione o tipo de cadastro:",
+                "Opções de Cadastro",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                options,
+                options[0]
+        );
+        final String choice = options[Integer.valueOf(ret.toString())];
         
-        String[] options = new String[] { "Paciente", "Médico", "Empregado" };  
-        Object ret = JOptionPane.showOptionDialog(null, "Selecione o tipo de cadastro.", "Opções de Cadastro", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]); 
-        System.out.println(options[Integer.valueOf(ret.toString())]);
-     
-                
-        if (null != options[Integer.valueOf(ret.toString())])switch (options[Integer.valueOf(ret.toString())]) {
-            case "Paciente":
-                TelaCadastro paciente = new TelaCadastro(0);
-                paciente.setVisible(true);
-                break;
-            case "Médico":
-                TelaCadastro medico = new TelaCadastro(1);
-                medico.setVisible(true);
-                break;
-            case "Empregado":
-                TelaCadastro empregado = new TelaCadastro(2);
-                empregado.setVisible(true);
-                
-                break;
+        if (null != choice) {
+            switch (choice) {
+                case "Paciente":
+                    TelaCadastro paciente = new TelaCadastro(0);
+                    paciente.setVisible(true);
+                    break;
+                case "Médico":
+                    TelaCadastro medico = new TelaCadastro(1);
+                    medico.setVisible(true);
+                    break;
+                case "Empregado":
+                    TelaCadastro empregado = new TelaCadastro(2);
+                    empregado.setVisible(true);
+                    break;
+            }
         }
     }//GEN-LAST:event_jButton2ActionPerformed
 
@@ -208,7 +218,6 @@ public class Central extends javax.swing.JFrame {
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
     private javax.swing.JInternalFrame jInternalFrame1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JMenu jMenu1;
