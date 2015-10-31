@@ -10,6 +10,7 @@ import cagehos.exc.InvalidCPFNumberException;
 import cagehos.lib.Address;
 import cagehos.lib.Doctor;
 import cagehos.lib.Employee;
+import cagehos.lib.Patient;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.naming.InvalidNameException;
@@ -20,8 +21,6 @@ import javax.swing.JOptionPane;
  * @author Leonardo
  */
 public class TelaCadastro extends javax.swing.JFrame {
-    private static int fieldNumber;
-
     public TelaCadastro(int tipoCadastro) {
         initComponents();
         //centraliza TelaCadastro, fica exatamente no centro da tela
@@ -204,6 +203,16 @@ public class TelaCadastro extends javax.swing.JFrame {
         jLabel2.setText("Nome:");
 
         tfPersonName.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+        tfPersonName.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                tfPersonNameFocusLost(evt);
+            }
+        });
+        tfPersonName.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                tfPersonNameMouseExited(evt);
+            }
+        });
         tfPersonName.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 tfPersonNameActionPerformed(evt);
@@ -486,7 +495,7 @@ public class TelaCadastro extends javax.swing.JFrame {
 
         jLabel23.setText("Médico Preferencial:");
 
-        cbPrefDoctor.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Dr. Mangojata" }));
+        cbPrefDoctor.setModel(new javax.swing.DefaultComboBoxModel(new String[] { " " }));
 
         jLabel24.setText("Observações:");
 
@@ -504,6 +513,7 @@ public class TelaCadastro extends javax.swing.JFrame {
                     .addComponent(jScrollPane3)
                     .addGroup(jPanel17Layout.createSequentialGroup()
                         .addGroup(jPanel17Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel24)
                             .addGroup(jPanel17Layout.createSequentialGroup()
                                 .addComponent(jLabel21)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -515,9 +525,8 @@ public class TelaCadastro extends javax.swing.JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(jLabel23)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(cbPrefDoctor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jLabel24))
-                        .addGap(0, 260, Short.MAX_VALUE)))
+                                .addComponent(cbPrefDoctor, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(0, 269, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel17Layout.setVerticalGroup(
@@ -841,7 +850,7 @@ public class TelaCadastro extends javax.swing.JFrame {
     }//GEN-LAST:event_tfCityNameActionPerformed
 
     private void tfPersonNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfPersonNameActionPerformed
-        // TODO add your handling code here:
+        //
     }//GEN-LAST:event_tfPersonNameActionPerformed
 
     private void btCancel1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btCancel1ActionPerformed
@@ -865,12 +874,13 @@ public class TelaCadastro extends javax.swing.JFrame {
     }//GEN-LAST:event_btCancel4ActionPerformed
 
     private void btNextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btNextActionPerformed
-        // talvez aqui deve se validar a primeira parte
         mTabCadastro.setSelectedIndex(1);
     }//GEN-LAST:event_btNextActionPerformed
 
     private void btFinish1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btFinish1ActionPerformed
         // cria entrada dos medicos
+        boolean gotError = false;
+        
         try {
             final String docName = tfPersonName.getText();
             final int sexID = ((cbSexType.getSelectedItem().equals("Masculino")) ? 1 : 2);
@@ -883,12 +893,27 @@ public class TelaCadastro extends javax.swing.JFrame {
             entry.setObservations(tfDoctorObservations.getText());
             entry.setCRM(Integer.parseInt("0" + tfDoctorCRM.getText()));
             
+            Address entryAddress = new Address(
+                    tfAddressName.getText(),
+                    Integer.parseInt("0" + tfAddressNumber.getText()),
+                    tfAddressDistrict.getText(),
+                    tfCityName.getText(),
+                    (String)cbState.getSelectedItem(),
+                    tfCEP.getText(),
+                    tfAddressComplement.getText()
+            );
+            
             /**
              * gravar na database e fechar
              */
             dispose();
-        } catch (InvalidNameException | InvalidCPFNumberException e) {
+        } catch (InvalidNameException | InvalidCPFNumberException | InvalidAddressException e) {
             JOptionPane.showMessageDialog(null, e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+            gotError = true;
+        } finally {
+            if (gotError) {
+                mTabCadastro.setSelectedIndex(0);
+            }
         }
     }//GEN-LAST:event_btFinish1ActionPerformed
 
@@ -923,6 +948,7 @@ public class TelaCadastro extends javax.swing.JFrame {
             dispose();
         } catch (InvalidNameException | InvalidCPFNumberException | InvalidAddressException e) {
             JOptionPane.showMessageDialog(null, e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+            gotError = true;
         } finally {
             if (gotError) {
                 mTabCadastro.setSelectedIndex(0);
@@ -932,7 +958,41 @@ public class TelaCadastro extends javax.swing.JFrame {
 
     private void btFinish3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btFinish3ActionPerformed
         // cria entrada no cadastro dos pacientes
-        dispose();
+        boolean gotError = false;
+        
+        try {
+            final String docName = tfPersonName.getText();
+            final int sexID = ((cbSexType.getSelectedItem().equals("Masculino")) ? 1 : 2);
+            final String cpfNum = tfCPF.getText();
+            final String birthDate = tfBirthday.getText();
+            
+            Patient entry = new Patient(docName, sexID, cpfNum, birthDate);
+            entry.setObservations(tfPatientObservations.getText());
+            entry.setBloodType((String)cbBloodType.getSelectedItem());
+            entry.setMaritalStatus((int)cbMaritalStatus.getSelectedIndex());
+            
+            Address entryAddress = new Address(
+                    tfAddressName.getText(),
+                    Integer.parseInt("0" + tfAddressNumber.getText()),
+                    tfAddressDistrict.getText(),
+                    tfCityName.getText(),
+                    (String)cbState.getSelectedItem(),
+                    tfCEP.getText(),
+                    tfAddressComplement.getText()
+            );
+            
+            /**
+             * gravar na database e fechar
+             */
+            dispose();
+        } catch (InvalidNameException | InvalidCPFNumberException | InvalidAddressException e) {
+            JOptionPane.showMessageDialog(null, e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+            gotError = true;
+        } finally {
+            if (gotError) {
+                mTabCadastro.setSelectedIndex(0);
+            }
+        }
     }//GEN-LAST:event_btFinish3ActionPerformed
 
     private void cbBloodTypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbBloodTypeActionPerformed
@@ -946,6 +1006,48 @@ public class TelaCadastro extends javax.swing.JFrame {
     private void tfAddressDistrictActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfAddressDistrictActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_tfAddressDistrictActionPerformed
+
+    private void tfPersonNameMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tfPersonNameMouseExited
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tfPersonNameMouseExited
+
+    private void tfPersonNameFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tfPersonNameFocusLost
+        boolean gotError = false;
+        
+        try {    
+            final String docName = tfPersonName.getText();
+            final int sexID = ((cbSexType.getSelectedItem().equals("Masculino")) ? 1 : 2);
+            final String cpfNum = tfCPF.getText();
+            final String birthDate = tfBirthday.getText();
+            
+            Employee entryInformation = new Employee(docName, sexID, cpfNum, birthDate);
+            entryInformation.setProfession(tfEmployeeFunction.getText());
+            entryInformation.setWorkingSection(tfEmployeeSection.getText());
+            entryInformation.setObservations(tfEmployeeObservations.getText());
+            
+            Address entryAddress = new Address(
+                    tfAddressName.getText(),
+                    Integer.parseInt("0"+tfAddressNumber.getText()),
+                    tfAddressDistrict.getText(),
+                    tfCityName.getText(),
+                    (String)cbState.getSelectedItem(),
+                    tfCEP.getText(),
+                    tfAddressComplement.getText()
+            );
+
+            /**
+             * gravar na database e fechar
+             */
+            dispose();
+        } catch (InvalidNameException | InvalidCPFNumberException | InvalidAddressException e) {
+            JOptionPane.showMessageDialog(null, e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+            gotError = true;
+        } finally {
+            if (gotError) {
+                mTabCadastro.setSelectedIndex(0);
+            }
+        }
+    }//GEN-LAST:event_tfPersonNameFocusLost
 
     /**
      * @param args the command line arguments

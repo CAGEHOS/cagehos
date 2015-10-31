@@ -8,41 +8,10 @@ import javax.naming.InvalidNameException;
  * @author Julio Ceron, Leonardo Falk
  */
 public class Patient extends Person {
-
-    /**
-     * The ID for undefined racial class for a person.
-     */
-    public final static int CLASS_NONE = 0;
-
-    /**
-     * The ID for white racial class for a person.
-     */
-    public final static int CLASS_WHITE = 1;
-
-    /**
-     * The ID for black racial class for a person.
-     */
-    public final static int CLASS_BLACK = 2;
-
-    /**
-     * The ID for indian racial class for a person.
-     */
-    public final static int CLASS_INDIAN = 3;
-
-    /**
-     * The ID for mulatto racial class for a person.
-     */
-    public final static int CLASS_MULATTO = 4;
-
-    /**
-     * The ID for yellow racial class for a person.
-     */
-    public final static int CLASS_YELLOW = 5;
-    
     /**
      * The ID for undefined marital status of a person.
      */
-    public final static int MSTATUS_NONE = 0;
+    public final static int MSTATUS_SINGLE = 0;
 
     /**
      * The ID for married marital status of a person.
@@ -64,13 +33,8 @@ public class Patient extends Person {
      */
     public final static int MSTATUS_OTHER = 4;
     
-    private String fatherName;
-    private String motherName;
     private String bloodType;
-    private String bloodFactor;
     private String observations;
-    private int classType;
-    private Address address;
     private int maritalStatus;
     
     /**
@@ -84,5 +48,53 @@ public class Patient extends Person {
      */
     public Patient(String name, int sexType, String cpf, String birth) throws InvalidNameException, InvalidCPFNumberException {
         super(name, sexType, cpf, birth);
+    }
+    
+    /**
+     * Sets the new blood type for the patient object.
+     * @param bType The new blood type.
+     */
+    public void setBloodType(String bType) {
+        bloodType = bType;
+    }
+    
+    /**
+     * Returns the current blood type of the patient object.
+     * @return The current blood type.
+     */
+    public String getBloodType() {
+        return bloodType;
+    }
+    
+    /**
+     * Sets the new medical observations for the patient object.
+     * @param obs The new observations.
+     */
+    public void setObservations(String obs) {
+        observations = obs;
+    }
+    
+    /**
+     * Returns the current medical observations of the patient object.
+     * @return The current observations.
+     */
+    public String getObservations() {
+        return observations;
+    }
+
+    /**
+     * Sets the new marital status for the patient object.
+     * @param mstatus The new marital status.
+     */
+    public void setMaritalStatus(int mstatus) {
+        maritalStatus = mstatus;
+    }
+    
+    /**
+     * Returns the current marital status of the patient object.
+     * @return The current marital status.
+     */
+    public int getMaritalStatus() {
+        return maritalStatus;
     }
 }
