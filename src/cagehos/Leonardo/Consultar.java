@@ -5,6 +5,11 @@
  */
 package cagehos.Leonardo;
 
+import cagehos.bd.ConnectionBD;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+
 /**
  *
  * @author Leonardo
@@ -32,9 +37,9 @@ public class Consultar extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        jRadioButton3 = new javax.swing.JRadioButton();
-        jRadioButton1 = new javax.swing.JRadioButton();
-        jRadioButton2 = new javax.swing.JRadioButton();
+        jPaciente = new javax.swing.JRadioButton();
+        jMedico = new javax.swing.JRadioButton();
+        jFuncionario = new javax.swing.JRadioButton();
         jPanel3 = new javax.swing.JPanel();
         tfSearchCPF = new javax.swing.JFormattedTextField();
         jLabel2 = new javax.swing.JLabel();
@@ -49,20 +54,20 @@ public class Consultar extends javax.swing.JFrame {
 
         jLabel1.setText("Tipo de Cadastro");
 
-        searchPersonTypeButtonGroup.add(jRadioButton3);
-        jRadioButton3.setSelected(true);
-        jRadioButton3.setText("Paciente");
+        searchPersonTypeButtonGroup.add(jPaciente);
+        jPaciente.setSelected(true);
+        jPaciente.setText("Paciente");
 
-        searchPersonTypeButtonGroup.add(jRadioButton1);
-        jRadioButton1.setText("Médico");
-        jRadioButton1.addActionListener(new java.awt.event.ActionListener() {
+        searchPersonTypeButtonGroup.add(jMedico);
+        jMedico.setText("Médico");
+        jMedico.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jRadioButton1ActionPerformed(evt);
+                jMedicoActionPerformed(evt);
             }
         });
 
-        searchPersonTypeButtonGroup.add(jRadioButton2);
-        jRadioButton2.setText("Funcionário");
+        searchPersonTypeButtonGroup.add(jFuncionario);
+        jFuncionario.setText("Funcionário");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -71,9 +76,9 @@ public class Consultar extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jRadioButton2)
-                    .addComponent(jRadioButton1)
-                    .addComponent(jRadioButton3)
+                    .addComponent(jFuncionario)
+                    .addComponent(jMedico)
+                    .addComponent(jPaciente)
                     .addComponent(jLabel1))
                 .addContainerGap(38, Short.MAX_VALUE))
         );
@@ -83,11 +88,11 @@ public class Consultar extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jRadioButton3)
+                .addComponent(jPaciente)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jRadioButton1)
+                .addComponent(jMedico)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jRadioButton2))
+                .addComponent(jFuncionario))
         );
 
         try {
@@ -182,11 +187,13 @@ public class Consultar extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jRadioButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton1ActionPerformed
+    private void jMedicoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMedicoActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jRadioButton1ActionPerformed
+    }//GEN-LAST:event_jMedicoActionPerformed
 
     private void btSearchQueryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btSearchQueryActionPerformed
+        
+        
         dispose();
     }//GEN-LAST:event_btSearchQueryActionPerformed
 
@@ -227,15 +234,15 @@ public class Consultar extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btSearchQuery;
+    private javax.swing.JRadioButton jFuncionario;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JRadioButton jMedico;
+    private javax.swing.JRadioButton jPaciente;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
-    private javax.swing.JRadioButton jRadioButton1;
-    private javax.swing.JRadioButton jRadioButton2;
-    private javax.swing.JRadioButton jRadioButton3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextField jTextField1;
     private javax.swing.ButtonGroup searchPersonTypeButtonGroup;

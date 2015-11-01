@@ -5,12 +5,17 @@
  */
 package cagehos.Leonardo;
 
+import cagehos.bd.ConnectionBD;
 import cagehos.exc.InvalidAddressException;
 import cagehos.exc.InvalidCPFNumberException;
 import cagehos.lib.Address;
 import cagehos.lib.Doctor;
 import cagehos.lib.Employee;
 import cagehos.lib.Patient;
+import java.sql.Connection;
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.naming.InvalidNameException;
@@ -149,6 +154,11 @@ public class TelaCadastro extends javax.swing.JFrame {
         jLabel5.setText("Sexo:");
 
         cbMaritalStatus.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Solteiro(a)", "Casado(a)", "Divorciado(a)", "Separado(a)", "Outro" }));
+        cbMaritalStatus.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbMaritalStatusActionPerformed(evt);
+            }
+        });
 
         jLabel6.setText("Estado Civil:");
 
@@ -903,6 +913,48 @@ public class TelaCadastro extends javax.swing.JFrame {
                     tfAddressComplement.getText()
             );
             
+            
+
+
+             /**
+              * ESSE É O CÓDIGO PARA INSERIR OS DADOS NO BANCO, EU FIZ EXATAMENTE COMO O ADARIO MOSTROU NA AULA, NÃO SEI SE ERA DESSA MANEIRA QUE TU PENSAVA EM FAZER, 
+              * LEMBRO QUE TU COMENTOU QUE QUERIA FAZER PELO OBJETO.
+              * ENFIM, NÃO SEI DIREITO QUAL ERA TUA IDEIA, MAS VOU DEIXAR O CÓDGIO, COMEÇA AQUI, E TERMINA NO PRÓXIMO COMENTÁRIO.
+              */
+            ConnectionBD conector = new ConnectionBD();
+            Connection conexao = conector.getConexao();
+            
+            try {
+                PreparedStatement cmdParam = 
+                conexao.prepareStatement("INSERT INTO medico (nome, cpf, tipo_id, numero_id, sexo, estado_civil, cidade, estado, cep, logradouro, numero, bairro, complemento, crm, pron_tratamento, area_especialidades, data_nascimento) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"); 
+                
+                cmdParam.setString(1, docName);
+                cmdParam.setString(2, cpfNum);                
+                cmdParam.setString(3, (String) cbIDType.getSelectedItem());
+                cmdParam.setString(4, tfIDNumber.getText());
+                cmdParam.setString(5, (String)cbSexType.getSelectedItem());
+                cmdParam.setString(6, (String)cbMaritalStatus.getSelectedItem());
+                cmdParam.setString(7, tfCityName.getText());
+                cmdParam.setString(8, (String)cbState.getSelectedItem());
+                cmdParam.setString(9, tfCEP.getText());
+                cmdParam.setString(10, tfAddressName.getText());
+                cmdParam.setString(11, tfAddressNumber.getText());
+                cmdParam.setString(12, tfAddressDistrict.getText());
+                cmdParam.setString(13, tfAddressComplement.getText());
+                cmdParam.setString(14, tfDoctorCRM.getText());
+                cmdParam.setString(15, (String)cbDoctorSpecialTreatment.getSelectedItem());
+                cmdParam.setString(16, tfDoctorObservations.getText());
+                cmdParam.setString(17, tfBirthday.getText());
+                int linhas = cmdParam.executeUpdate();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            /**
+             * FIM
+             */
+            
+            
+            
             /**
              * gravar na database e fechar
              */
@@ -915,6 +967,11 @@ public class TelaCadastro extends javax.swing.JFrame {
                 mTabCadastro.setSelectedIndex(0);
             }
         }
+        
+        
+        
+        
+        
     }//GEN-LAST:event_btFinish1ActionPerformed
 
     private void btFinish2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btFinish2ActionPerformed
@@ -1048,6 +1105,10 @@ public class TelaCadastro extends javax.swing.JFrame {
             }
         }
     }//GEN-LAST:event_tfPersonNameFocusLost
+
+    private void cbMaritalStatusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbMaritalStatusActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cbMaritalStatusActionPerformed
 
     /**
      * @param args the command line arguments
