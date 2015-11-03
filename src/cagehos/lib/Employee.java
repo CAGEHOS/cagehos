@@ -1,7 +1,7 @@
 package cagehos.lib;
 
 import cagehos.exc.InvalidCPFNumberException;
-import javax.naming.InvalidNameException;
+import cagehos.exc.InvalidNameException;
 
 /**
  * The Employee class provides methods to create and access information about any employee of the hospital.
@@ -13,13 +13,13 @@ public class Employee extends Person {
     /**
      * Creates the object Employee with information about the person.
      * @param name The employee's name.
-     * @param sexType The employee's sex gender as 1 for male or 2 for female.
+     * @param sexType The doctor's sex gender.
      * @param cpf The employee's CPF.
      * @param birth The employee's birth date.
      * @throws InvalidNameException If the employee's name contains invalid letters.
      * @throws InvalidCPFNumberException If the employee's CPF contains a invalid sequence.
      */
-    public Employee(String name, int sexType, String cpf, String birth) throws InvalidNameException, InvalidCPFNumberException {
+    public Employee(String name, String sexType, String cpf, String birth) throws InvalidNameException, InvalidCPFNumberException {
         super(name, sexType, cpf, birth);
     }
     

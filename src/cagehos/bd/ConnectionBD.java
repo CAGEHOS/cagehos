@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package cagehos.bd;
 
 import java.sql.Statement;
@@ -11,11 +6,6 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import javax.swing.JOptionPane;
 
-
-/**
- *
- * @author Dias
- */
 public class ConnectionBD {
     
     static final String BDDriver = "org.postgresql.Driver";        
@@ -50,11 +40,11 @@ public class ConnectionBD {
         BDUser = pBDUser;
         BDPass = pBDPass;
         
-        try{
+        try {
             //*********
             conn = DriverManager.getConnection(pBDName, pBDUser, pBDPass);
             //*********
-        }catch (SQLException e){
+        } catch (SQLException e){
             JOptionPane.showMessageDialog(null,
                     "Erro ao tentar conexao com o banco de dados",
                                                 "Erro de conexao",
@@ -67,30 +57,30 @@ public class ConnectionBD {
     }
     
     public Statement getDBCommand(){
-        try{
+        try {
             stat = conn.createStatement();
         } catch (SQLException e){
             JOptionPane.showMessageDialog(null,
                     "Erro ao tentar conexao com o banco de dados",
                                                 "Erro de conexao",
                                                 JOptionPane.ERROR_MESSAGE);
-        }finally{
+        } finally {
             if (stat == null){
-            conn = null;
+                conn = null;
             }
+            
             return stat;
         }
     }
     
     public void encerraConexao(){
         if (stat != null){
-            try{
+            try {
                 stat.close();
                 conn.close();
-            }catch (SQLException evt){
+            } catch (SQLException evt){
                 evt.printStackTrace();
             }
         }
     }   
-    
 }
