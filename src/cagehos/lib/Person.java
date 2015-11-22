@@ -118,8 +118,8 @@ public class Person {
      * Returns the current birth date of the Person object.
      * @return Returns the Person object birth date.
      */
-    public Date getBirthDate() {
-        return birthDate;
+    public String getBirthDate() {
+        return String.format("%02d/%02d/%04d", birthDate.getDay(), birthDate.getMonth(), birthDate.getYear());
     }
     
     /**
