@@ -856,6 +856,9 @@ public class TelaCadastro extends javax.swing.JFrame {
             entry.setTreatment((String)cbDoctorSpecialTreatment.getSelectedItem());
             entry.setObservations(tfDoctorObservations.getText());
             entry.setCRM(Integer.parseInt("0" + tfDoctorCRM.getText()));
+            entry.setMaritalStatus((String)cbMaritalStatus.getSelectedItem());
+            entry.setIDType((String)cbIDType.getSelectedItem());
+            entry.setIDNumber(tfIDNumber.getText());
             
             Address entryAddress = new Address(
                     tfAddressName.getText(),
@@ -889,7 +892,8 @@ public class TelaCadastro extends javax.swing.JFrame {
             cmdParam.setString(14, String.valueOf(entry.getCRM()));
             cmdParam.setString(15, entry.getTreatment());
             cmdParam.setString(16, entry.getObservations());
-            cmdParam.setString(17, entry.getBirthDate().toString());
+            cmdParam.setString(17, entry.getBirthDate());
+            
             int changedLines = cmdParam.executeUpdate();
 
             dispose();
