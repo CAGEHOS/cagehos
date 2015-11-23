@@ -846,10 +846,10 @@ public class TelaCadastro extends javax.swing.JFrame {
         
         try {
             Doctor entry = new Doctor(
-                    tfPersonName.getText(),
-                    (String)cbSexType.getSelectedItem(),
-                    tfCPF.getText(),
-                    tfBirthday.getText()
+                tfPersonName.getText(),
+                (String)cbSexType.getSelectedItem(),
+                tfCPF.getText(),
+                tfBirthday.getText()
             );
             
             entry.setProfession("Médico");
@@ -861,13 +861,13 @@ public class TelaCadastro extends javax.swing.JFrame {
             entry.setIDNumber(tfIDNumber.getText());
             
             Address entryAddress = new Address(
-                    tfAddressName.getText(),
-                    Integer.parseInt("0" + tfAddressNumber.getText()),
-                    tfAddressDistrict.getText(),
-                    tfCityName.getText(),
-                    (String)cbState.getSelectedItem(),
-                    tfCEP.getText(),
-                    tfAddressComplement.getText()
+                tfAddressName.getText(),
+                Integer.parseInt("0" + tfAddressNumber.getText()),
+                tfAddressDistrict.getText(),
+                tfCityName.getText(),
+                (String)cbState.getSelectedItem(),
+                tfCEP.getText(),
+                tfAddressComplement.getText()
             );
             
             ConnectionBD conector = new ConnectionBD();
@@ -910,11 +910,140 @@ public class TelaCadastro extends javax.swing.JFrame {
     }//GEN-LAST:event_btFinish1ActionPerformed
 
     private void btFinish2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btFinish2ActionPerformed
-        // cria entrada no cadastro dos funcionarios
+        // cria entrada dos medicos
+        // to do: criar metodo padrao para inserir os dados
+        boolean gotError = false;
+        
+        try {
+            Employee entry = new Employee(
+                tfPersonName.getText(),
+                (String)cbSexType.getSelectedItem(),
+                tfCPF.getText(),
+                tfBirthday.getText()
+            );
+            
+            entry.setProfession(tfEmployeeFunction.getText());
+            entry.setWorkingSection(tfEmployeeSection.getText());
+            entry.setObservations(tfEmployeeObservations.getText());
+            entry.setMaritalStatus((String)cbMaritalStatus.getSelectedItem());
+            entry.setIDType((String)cbIDType.getSelectedItem());
+            entry.setIDNumber((String) tfIDNumber.getText());
+            
+            Address entryAddress = new Address(
+                tfAddressName.getText(),
+                Integer.parseInt("0" + tfAddressNumber.getText()),
+                tfAddressDistrict.getText(),
+                tfCityName.getText(),
+                (String)cbState.getSelectedItem(),
+                tfCEP.getText(),
+                tfAddressComplement.getText()
+            );
+            
+            ConnectionBD conector = new ConnectionBD();
+            Connection conexao = conector.getConexao();
+            
+            PreparedStatement cmdParam = 
+            conexao.prepareStatement("INSERT INTO empregado (nome, cpf, tipo_id, numero_id, sexo, estado_civil, cidade, estado, cep, logradouro, numero, bairro, complemento, setor, cargo, area_especialidades, data_nascimento) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"); 
+
+            cmdParam.setString(1, entry.getName());
+            cmdParam.setString(2, entry.getCPF().toString(true));                
+            cmdParam.setString(3, entry.getIDType());
+            cmdParam.setString(4, entry.getIDNumber());
+            cmdParam.setString(5, entry.getGender());
+            cmdParam.setString(6, entry.getMaritalStatus());
+            cmdParam.setString(7, entryAddress.getCityName());
+            cmdParam.setString(8, entryAddress.getStateName());
+            cmdParam.setString(9, entryAddress.getZipCode());
+            cmdParam.setString(10, entryAddress.getName());
+            cmdParam.setString(11, String.valueOf(entryAddress.getNumber()));
+            cmdParam.setString(12, entryAddress.getDistrict());
+            cmdParam.setString(13, entryAddress.getComplement());
+            cmdParam.setString(14, entry.getWorkingSection());
+            cmdParam.setString(15, entry.getProfession());
+            cmdParam.setString(16, entry.getObservations());
+            cmdParam.setString(17, entry.getBirthDate());
+            
+            int changedLines = cmdParam.executeUpdate();
+
+            dispose();
+        } catch (InvalidNameException | InvalidCPFNumberException | InvalidAddressException e) {
+            JOptionPane.showMessageDialog(null, e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+            gotError = true;
+        } catch (SQLException e) {
+            e.printStackTrace(System.out);
+        } finally {
+            if (gotError) {
+                mTabCadastro.setSelectedIndex(0);
+            }
+        }
     }//GEN-LAST:event_btFinish2ActionPerformed
 
     private void btFinish3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btFinish3ActionPerformed
         // cria entrada no cadastro dos pacientes
+         // to do: criar metodo padrao para inserir os dados
+        boolean gotError = false;
+        
+        try {
+            Patient entry = new Patient(
+                tfPersonName.getText(),
+                (String)cbSexType.getSelectedItem(),
+                tfCPF.getText(),
+                tfBirthday.getText()
+            );
+            
+            entry.setBloodType((String) cbBloodType.getSelectedItem());
+            entry.setObservations(tfPatientObservations.getText());
+            entry.setMaritalStatus((String)cbMaritalStatus.getSelectedItem());
+            entry.setIDType((String)cbIDType.getSelectedItem());
+            entry.setIDNumber((String) tfIDNumber.getText());
+            
+            Address entryAddress = new Address(
+                tfAddressName.getText(),
+                Integer.parseInt("0" + tfAddressNumber.getText()),
+                tfAddressDistrict.getText(),
+                tfCityName.getText(),
+                (String)cbState.getSelectedItem(),
+                tfCEP.getText(),
+                tfAddressComplement.getText()
+            );
+            
+            ConnectionBD conector = new ConnectionBD();
+            Connection conexao = conector.getConexao();
+            
+            PreparedStatement cmdParam = 
+            conexao.prepareStatement("INSERT INTO paciente (nome, cpf, tipo_id, numero_id, sexo, estado_civil, cidade, estado, cep, logradouro, numero, bairro, complemento, tipo_sanguineo, medico_preferencial, observacoes, data_nascimento) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"); 
+
+            cmdParam.setString(1, entry.getName());
+            cmdParam.setString(2, entry.getCPF().toString(true));                
+            cmdParam.setString(3, entry.getIDType());
+            cmdParam.setString(4, entry.getIDNumber());
+            cmdParam.setString(5, entry.getGender());
+            cmdParam.setString(6, entry.getMaritalStatus());
+            cmdParam.setString(7, entryAddress.getCityName());
+            cmdParam.setString(8, entryAddress.getStateName());
+            cmdParam.setString(9, entryAddress.getZipCode());
+            cmdParam.setString(10, entryAddress.getName());
+            cmdParam.setString(11, String.valueOf(entryAddress.getNumber()));
+            cmdParam.setString(12, entryAddress.getDistrict());
+            cmdParam.setString(13, entryAddress.getComplement());
+            cmdParam.setString(14, entry.getBloodType());
+            cmdParam.setString(15, (String) cbPrefDoctor.getSelectedItem());
+            cmdParam.setString(16, entry.getObservations());
+            cmdParam.setString(17, entry.getBirthDate());
+            
+            int changedLines = cmdParam.executeUpdate();
+
+            dispose();
+        } catch (InvalidNameException | InvalidCPFNumberException | InvalidAddressException e) {
+            JOptionPane.showMessageDialog(null, e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+            gotError = true;
+        } catch (SQLException e) {
+            e.printStackTrace(System.out);
+        } finally {
+            if (gotError) {
+                mTabCadastro.setSelectedIndex(0);
+            }
+        }
     }//GEN-LAST:event_btFinish3ActionPerformed
 
     private void tfPersonNameFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tfPersonNameFocusLost
