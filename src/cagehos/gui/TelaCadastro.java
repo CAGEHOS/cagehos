@@ -44,19 +44,6 @@ public class TelaCadastro extends javax.swing.JFrame {
                  e.printStackTrace(System.out);
             }
 
-            
-        
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
         } else if (tipoCadastro == 1) {
             mTabCadastro.removeTabAt(1);
             mTabCadastro.removeTabAt(1);

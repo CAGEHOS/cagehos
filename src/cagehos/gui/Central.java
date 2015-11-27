@@ -4,7 +4,7 @@ import javax.swing.JOptionPane;
 
 public class Central extends javax.swing.JFrame {
     public Central() {
-        initComponents();
+        initComponents();       
     }
 
     @SuppressWarnings("unchecked")

@@ -9,6 +9,11 @@ import cagehos.bd.ConnectionBD;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  *
@@ -192,9 +197,50 @@ public class Consultar extends javax.swing.JFrame {
     }//GEN-LAST:event_rbDoctorActionPerformed
 
     private void btSearchQueryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btSearchQueryActionPerformed
+        String tipo = "paciente";
+        
+        if (rbDoctor.isSelected()) {
+            tipo = "medico";
+        } else if (rbEmployee.isSelected()) {
+            tipo = "empregado";
+        }
+        
+        String search = String.format("SELECT * FROM %s ORDER BY nome ASC", tipo);
+        
+        try {            
+            ConnectionBD conector = new ConnectionBD();
+            Connection conexao = conector.getConexao();
+
+            PreparedStatement searchParam = conexao.prepareStatement(search);
+            ResultSet resultadoConsulta = searchParam.executeQuery();
+
+            List<String[]>  lista = new ArrayList<>();
+
+            while(resultadoConsulta.next()) {                    
+                String vector[] = new String[2];
+                vector[0] = resultadoConsulta.getString("nome");
+                vector[1] = resultadoConsulta.getString("cpf");
+                lista.add(vector);                    
+            }
+
+            Iterator it = lista.iterator();
+
+            while (it.hasNext()) {
+                System.out.println(Arrays.toString((String[]) it.next()));
+            }
+        } catch (SQLException e){
+             e.printStackTrace(System.out);
+        }
         
         
-        dispose();
+        
+        
+        
+        
+        
+        
+        
+        
     }//GEN-LAST:event_btSearchQueryActionPerformed
 
     /**
