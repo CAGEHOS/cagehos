@@ -16,6 +16,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import cagehos.exc.InvalidNameException;
+import java.sql.ResultSet;
 import javax.swing.JOptionPane;
 
 public class TelaCadastro extends javax.swing.JFrame {
@@ -27,6 +28,22 @@ public class TelaCadastro extends javax.swing.JFrame {
         if (tipoCadastro == 0) {
             mTabCadastro.removeTabAt(2);
             mTabCadastro.removeTabAt(2);
+            
+            try {            
+                ConnectionBD conector = new ConnectionBD();
+                Connection conexao = conector.getConexao();
+
+                PreparedStatement searchParam = conexao.prepareStatement("SELECT nome FROM medico ORDER BY nome ASC");
+                ResultSet resultadoConsulta = searchParam.executeQuery();
+
+                while(resultadoConsulta.next()) {
+                    cbPrefDoctor.addItem(resultadoConsulta.getString("nome"));
+                }
+            
+            } catch (SQLException e){
+                 e.printStackTrace(System.out);
+            }
+
         } else if (tipoCadastro == 1) {
             mTabCadastro.removeTabAt(1);
             mTabCadastro.removeTabAt(1);
@@ -482,8 +499,6 @@ public class TelaCadastro extends javax.swing.JFrame {
         cbBloodType.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "O-", "O+", "A-", "A+", "B-", "B+", "AB-", "AB+" }));
 
         jLabel23.setText("Médico Preferencial:");
-
-        cbPrefDoctor.setModel(new javax.swing.DefaultComboBoxModel(new String[] { " " }));
 
         jLabel24.setText("Observações:");
 

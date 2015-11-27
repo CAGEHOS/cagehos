@@ -564,8 +564,8 @@
               <Layout class="org.netbeans.modules.form.compat2.layouts.DesignGridLayout">
                 <Property name="columns" type="int" value="3"/>
                 <Property name="horizontalGap" type="int" value="5"/>
-                <Property name="verticalGap" type="int" value="5"/>
                 <Property name="rows" type="int" value="1"/>
+                <Property name="verticalGap" type="int" value="5"/>
               </Layout>
               <SubComponents>
                 <Component class="javax.swing.JButton" name="btEdit">
@@ -747,13 +747,6 @@
                       </Properties>
                     </Component>
                     <Component class="javax.swing.JComboBox" name="cbPrefDoctor">
-                      <Properties>
-                        <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                          <StringArray count="1">
-                            <StringItem index="0" value=" "/>
-                          </StringArray>
-                        </Property>
-                      </Properties>
                     </Component>
                     <Component class="javax.swing.JLabel" name="jLabel24">
                       <Properties>
@@ -784,8 +777,8 @@
               <Layout class="org.netbeans.modules.form.compat2.layouts.DesignGridLayout">
                 <Property name="columns" type="int" value="3"/>
                 <Property name="horizontalGap" type="int" value="5"/>
-                <Property name="verticalGap" type="int" value="5"/>
                 <Property name="rows" type="int" value="1"/>
+                <Property name="verticalGap" type="int" value="5"/>
               </Layout>
               <SubComponents>
                 <Component class="javax.swing.JButton" name="btCancel4">
@@ -965,8 +958,8 @@
               <Layout class="org.netbeans.modules.form.compat2.layouts.DesignGridLayout">
                 <Property name="columns" type="int" value="3"/>
                 <Property name="horizontalGap" type="int" value="5"/>
-                <Property name="verticalGap" type="int" value="5"/>
                 <Property name="rows" type="int" value="1"/>
+                <Property name="verticalGap" type="int" value="5"/>
               </Layout>
               <SubComponents>
                 <Component class="javax.swing.JButton" name="btCancel3">
@@ -1155,8 +1148,8 @@
               <Layout class="org.netbeans.modules.form.compat2.layouts.DesignGridLayout">
                 <Property name="columns" type="int" value="3"/>
                 <Property name="horizontalGap" type="int" value="5"/>
-                <Property name="verticalGap" type="int" value="5"/>
                 <Property name="rows" type="int" value="1"/>
+                <Property name="verticalGap" type="int" value="5"/>
               </Layout>
               <SubComponents>
                 <Component class="javax.swing.JButton" name="btCancel2">
