@@ -6,6 +6,7 @@
 package cagehos.gui;
 
 import cagehos.bd.ConnectionBD;
+import cagehos.lib.CPF;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -14,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -67,6 +69,11 @@ public class Consultar extends javax.swing.JFrame {
 
         searchPersonTypeButtonGroup.add(rbDoctor);
         rbDoctor.setText("Médico");
+        rbDoctor.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                rbDoctorActionPerformed(evt);
+            }
+        });
 
         searchPersonTypeButtonGroup.add(rbEmployee);
         rbEmployee.setText("Funcionário");
@@ -208,6 +215,7 @@ public class Consultar extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
+        tableSearchResults.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         tableSearchResults.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 tableSearchResultsMouseClicked(evt);
@@ -259,35 +267,56 @@ public class Consultar extends javax.swing.JFrame {
 
             List<String[]>  lista = new ArrayList<>();
 
+            String name = tfSearchName.getText().toLowerCase();
+            CPF cpf1 = null;
+                    
+            if (tfSearchCPF.getText().split("[^d]+").length > 0) {
+                cpf1 = new CPF(tfSearchCPF.getText());
+            }
+            
             while(resultadoConsulta.next()) {                    
-                String vector[] = new String[2];
-                vector[0] = resultadoConsulta.getString("nome");
-                vector[1] = resultadoConsulta.getString("cpf");
-                lista.add(vector);                    
+                String vector[] = {
+                    resultadoConsulta.getString("nome"),
+                    resultadoConsulta.getString("cpf"),
+                };
+                
+                CPF cpf2 = null;
+                
+                if (cpf1 != null) {
+                    cpf2 = new CPF(vector[1]);
+                }
+                
+                if ((name.length() == 0 || name.contains(vector[0].toLowerCase()) || vector[0].toLowerCase().contains(name))) {
+                    lista.add(vector);
+                }
             }
 
             Iterator it = lista.iterator();
-
+            
+            DefaultTableModel dtm = (DefaultTableModel)tableSearchResults.getModel();
+            dtm.setRowCount(lista.size());
+            tableSearchResults.setModel(dtm);
+            
+            for (int j = 0; j < lista.size(); j++) {
+                if (it.hasNext()) {
+                    String[] info = (String[])it.next();
+                    tableSearchResults.getModel().setValueAt(info[0], j, 0);
+                    tableSearchResults.getModel().setValueAt(info[1], j, 1);
+                } else {
+                    break;
+                }
+            }
+            
             while (it.hasNext()) {
                 System.out.println(Arrays.toString((String[]) it.next()));
             }
         } catch (SQLException e){
              e.printStackTrace(System.out);
         }
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
     }//GEN-LAST:event_btSearchQueryActionPerformed
 
     private void tableSearchResultsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableSearchResultsMouseClicked
-        if (evt.getClickCount() == 2) {
+        if (evt.getClickCount() == 1) {
             final int posy = evt.getPoint().y;
             final int rowTotalHeight = (tableSearchResults.getRowHeight() +
                     tableSearchResults.getRowMargin());
@@ -299,9 +328,91 @@ public class Consultar extends javax.swing.JFrame {
                 userEntry = "";
             }
             
+            
+            //String rowSelected = String.format("SELECT * FROM %s ORDER BY nome ASC", userEntry.toString());
+            String rowSelected = "";
+            
+            if (rbPatient.isSelected()) {
+                rowSelected = "SELECT * FROM paciente WHERE NOME = '";
+            }            
+            if (rbDoctor.isSelected()) {
+                rowSelected = "SELECT * FROM medico WHERE NOME = '";
+            }            
+            if (rbEmployee.isSelected()) {
+                rowSelected = "SELECT * FROM empregado WHERE NOME = '";
+            }
+            
+            
             System.out.println("CLICOU EM:" + userEntry.toString());
+            
+            //SELECT * FROM paciente
+            rowSelected = rowSelected + userEntry.toString() + "'";
+            
+            System.out.println(rowSelected);
+            
+            try {            
+                ConnectionBD conector = new ConnectionBD();
+                Connection conexao = conector.getConexao();
+
+                PreparedStatement searchParam = conexao.prepareStatement(rowSelected);
+                ResultSet resultadoConsulta = searchParam.executeQuery();
+
+                List<String[]>  lista = new ArrayList<>();
+
+                while (resultadoConsulta.next()) {
+                    System.out.println(resultadoConsulta.getString("nome"));
+                    System.out.println(resultadoConsulta.getString("cpf"));
+                    System.out.println(resultadoConsulta.getString("tipo_id"));
+                    System.out.println(resultadoConsulta.getString("numero_id"));
+                    System.out.println(resultadoConsulta.getString("sexo"));
+                    System.out.println(resultadoConsulta.getString("estado_civil"));
+                    System.out.println(resultadoConsulta.getString("cidade"));
+                    System.out.println(resultadoConsulta.getString("estado"));
+                    System.out.println(resultadoConsulta.getString("cep"));
+                    System.out.println(resultadoConsulta.getString("logradouro"));
+                    System.out.println(resultadoConsulta.getString("numero"));
+                    System.out.println(resultadoConsulta.getString("bairro"));
+                    System.out.println(resultadoConsulta.getString("complemento"));                    
+                    
+                    if (rbPatient.isSelected()){
+                        System.out.println(resultadoConsulta.getString("tipo_sanguineo"));
+                        System.out.println(resultadoConsulta.getString("medico_preferencial"));
+                        System.out.println(resultadoConsulta.getString("observacoes"));
+                        System.out.println(resultadoConsulta.getString("data_nascimento"));
+                    }
+                    
+                    if (rbDoctor.isSelected()){
+                        System.out.println(resultadoConsulta.getString("crm"));
+                        System.out.println(resultadoConsulta.getString("pron_tratamento"));
+                        System.out.println(resultadoConsulta.getString("area_especialidades"));
+                        System.out.println(resultadoConsulta.getString("data_nascimento"));
+                    }
+                    
+                    if (rbEmployee.isSelected()){
+                        System.out.println(resultadoConsulta.getString("setor"));
+                        System.out.println(resultadoConsulta.getString("cargo"));
+                        System.out.println(resultadoConsulta.getString("area_especialidades"));
+                        System.out.println(resultadoConsulta.getString("data_nascimento"));
+                    }
+                
+                }
+
+//                DefaultTableModel dtm = (DefaultTableModel)tableSearchResults.getModel();
+//                dtm.setRowCount(lista.size());
+//                tableSearchResults.setModel(dtm);
+                
+            } catch (SQLException e){
+                 e.printStackTrace(System.out);
+            }
+            
+            
+            
         }
     }//GEN-LAST:event_tableSearchResultsMouseClicked
+
+    private void rbDoctorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbDoctorActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_rbDoctorActionPerformed
 
     public static void main(String args[]) {
         try {
