@@ -34,6 +34,7 @@ public class Consultar extends javax.swing.JFrame {
     private void initComponents() {
 
         searchPersonTypeButtonGroup = new javax.swing.ButtonGroup();
+        jScrollBar1 = new javax.swing.JScrollBar();
         pOptions = new javax.swing.JPanel();
         pEntryType = new javax.swing.JPanel();
         lbTipoDeCadastro = new javax.swing.JLabel();
@@ -47,6 +48,7 @@ public class Consultar extends javax.swing.JFrame {
         tfSearchName = new javax.swing.JTextField();
         btSearchQuery = new javax.swing.JButton();
         spResultsPanel = new javax.swing.JScrollPane();
+        tableSearchResults = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -60,11 +62,6 @@ public class Consultar extends javax.swing.JFrame {
 
         searchPersonTypeButtonGroup.add(rbDoctor);
         rbDoctor.setText("Médico");
-        rbDoctor.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                rbDoctorActionPerformed(evt);
-            }
-        });
 
         searchPersonTypeButtonGroup.add(rbEmployee);
         rbEmployee.setText("Funcionário");
@@ -163,6 +160,56 @@ public class Consultar extends javax.swing.JFrame {
             .addComponent(pEntryType, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
+        tableSearchResults.setAutoCreateRowSorter(true);
+        tableSearchResults.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null},
+                {null, null},
+                {null, null},
+                {null, null},
+                {null, null},
+                {null, null},
+                {null, null},
+                {null, null},
+                {null, null},
+                {null, null},
+                {null, null},
+                {null, null},
+                {null, null},
+                {null, null},
+                {null, null},
+                {null, null},
+                {null, null},
+                {null, null},
+                {null, null},
+                {null, null}
+            },
+            new String [] {
+                "Nome", "CPF"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.String.class, java.lang.String.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        tableSearchResults.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tableSearchResultsMouseClicked(evt);
+            }
+        });
+        spResultsPanel.setViewportView(tableSearchResults);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -180,16 +227,12 @@ public class Consultar extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(pOptions, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(spResultsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 332, Short.MAX_VALUE)
+                .addComponent(spResultsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 360, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void rbDoctorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbDoctorActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_rbDoctorActionPerformed
 
     private void btSearchQueryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btSearchQueryActionPerformed
         
@@ -197,38 +240,40 @@ public class Consultar extends javax.swing.JFrame {
         dispose();
     }//GEN-LAST:event_btSearchQueryActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
+    private void tableSearchResultsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableSearchResultsMouseClicked
+        if (evt.getClickCount() == 2) {
+            final int posy = evt.getPoint().y;
+            final int rowTotalHeight = (tableSearchResults.getRowHeight() +
+                    tableSearchResults.getRowMargin());
+            final int rowIndex = posy / rowTotalHeight;
+            
+            Object userEntry = tableSearchResults.getModel().getValueAt(rowIndex, 0);
+            
+            if (userEntry == null) {
+                userEntry = "";
+            }
+            
+            System.out.println("CLICOU EM:" + userEntry.toString());
+        }
+    }//GEN-LAST:event_tableSearchResultsMouseClicked
+
     public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
+                if ("GTK+".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                } else if ("Windows".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
                 }
             }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Consultar.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Consultar.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Consultar.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(Consultar.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
-        //</editor-fold>
 
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new Consultar().setVisible(true);
-            }
+        java.awt.EventQueue.invokeLater(() -> {
+            new Consultar().setVisible(true);
         });
     }
 
@@ -236,6 +281,7 @@ public class Consultar extends javax.swing.JFrame {
     private javax.swing.JButton btSearchQuery;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JScrollBar jScrollBar1;
     private javax.swing.JLabel lbTipoDeCadastro;
     private javax.swing.JPanel pEntryType;
     private javax.swing.JPanel pKeyWords;
@@ -245,6 +291,7 @@ public class Consultar extends javax.swing.JFrame {
     private javax.swing.JRadioButton rbPatient;
     private javax.swing.ButtonGroup searchPersonTypeButtonGroup;
     private javax.swing.JScrollPane spResultsPanel;
+    private javax.swing.JTable tableSearchResults;
     private javax.swing.JFormattedTextField tfSearchCPF;
     private javax.swing.JTextField tfSearchName;
     // End of variables declaration//GEN-END:variables

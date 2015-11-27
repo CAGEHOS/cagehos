@@ -1085,6 +1085,9 @@ public class TelaCadastro extends javax.swing.JFrame {
                 if ("Windows".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
+                } else if ("GTK+".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
                 }
             }
         } catch (ClassNotFoundException ex) {
