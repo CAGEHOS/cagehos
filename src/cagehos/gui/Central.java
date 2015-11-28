@@ -125,15 +125,15 @@ public class Central extends javax.swing.JFrame {
         if (null != choice) {
             switch (choice) {
                 case "Paciente":
-                    TelaCadastro paciente = new TelaCadastro(0, false);
+                    TelaCadastro paciente = new TelaCadastro(0, false, null);
                     paciente.setVisible(true);
                     break;
                 case "Médico":
-                    TelaCadastro medico = new TelaCadastro(1, false);
+                    TelaCadastro medico = new TelaCadastro(1, false, null);
                     medico.setVisible(true);
                     break;
                 case "Empregado":
-                    TelaCadastro empregado = new TelaCadastro(2, false);
+                    TelaCadastro empregado = new TelaCadastro(2, false, null);
                     empregado.setVisible(true);
                     break;
             }
@@ -147,23 +147,25 @@ public class Central extends javax.swing.JFrame {
 
     public static void main(String args[]) {
         try {
+            OUTER:
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Windows".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                } else if ("GTK+".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
+                if (null != info.getName()) {
+                    switch (info.getName()) {
+                        case "Windows":
+                            javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                            break OUTER;
+                        case "GTK+":
+                            javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                            break OUTER;
+                    }
                 }
             }
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(Central.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
 
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new Central().setVisible(true);
-            }
+        java.awt.EventQueue.invokeLater(() -> {
+            new Central().setVisible(true);
         });
     }
 

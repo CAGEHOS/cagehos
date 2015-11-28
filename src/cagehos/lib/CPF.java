@@ -113,4 +113,8 @@ public class CPF {
     public String toString() {
         return cpfNumber;
     }
+    
+    public boolean equals(CPF toCompare) {
+        return toCompare.cpfNumber.equals(this.cpfNumber);
+    }
 }

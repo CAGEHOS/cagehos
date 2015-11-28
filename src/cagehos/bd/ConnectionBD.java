@@ -4,10 +4,8 @@ import java.sql.Statement;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import javax.swing.JOptionPane;
 
 public class ConnectionBD {
-    
     static final String BDDriver = "org.postgresql.Driver";        
     static final String DEFAULT_BDNAME = "jdbc:postgresql://localhost:5432/bdcagehos";
     static final String DEFAULT_BDUSER = "postgres";
@@ -19,14 +17,16 @@ public class ConnectionBD {
     private Connection conn = null;
     private Statement stat = null;
     
-    {
+    static {
         try {
             Class.forName(BDDriver);
         } catch (ClassNotFoundException e){
-            JOptionPane.showMessageDialog(null,
-                        "Erro na Localizaçao do driver do banco de dados",
-                        "Problema com Driver",
-            JOptionPane.ERROR_MESSAGE);
+            javax.swing.JOptionPane.showMessageDialog(null,
+                "Erro na Localizaçao do driver do banco de dados",
+                "Problema com Driver",
+                javax.swing.JOptionPane.ERROR_MESSAGE
+            );
+            
             System.exit(1);
         }
     }
@@ -41,14 +41,13 @@ public class ConnectionBD {
         BDPass = pBDPass;
         
         try {
-            //*********
             conn = DriverManager.getConnection(pBDName, pBDUser, pBDPass);
-            //*********
         } catch (SQLException e){
-            JOptionPane.showMessageDialog(null,
-                    "Erro ao tentar conexao com o banco de dados",
-                                                "Erro de conexao",
-                                                JOptionPane.ERROR_MESSAGE);
+            javax.swing.JOptionPane.showMessageDialog(null,
+                "Erro ao tentar conexao com o banco de dados",
+                "Erro de conexao",
+                javax.swing.JOptionPane.ERROR_MESSAGE
+            );
         }
     }
     
@@ -60,10 +59,11 @@ public class ConnectionBD {
         try {
             stat = conn.createStatement();
         } catch (SQLException e){
-            JOptionPane.showMessageDialog(null,
-                    "Erro ao tentar conexao com o banco de dados",
-                                                "Erro de conexao",
-                                                JOptionPane.ERROR_MESSAGE);
+            javax.swing.JOptionPane.showMessageDialog(null,
+                "Erro ao tentar conexao com o banco de dados",
+                "Erro de conexao",
+                javax.swing.JOptionPane.ERROR_MESSAGE
+            );
         } finally {
             if (stat == null){
                 conn = null;
@@ -79,7 +79,7 @@ public class ConnectionBD {
                 stat.close();
                 conn.close();
             } catch (SQLException evt){
-                evt.printStackTrace();
+                evt.printStackTrace(System.out);
             }
         }
     }   

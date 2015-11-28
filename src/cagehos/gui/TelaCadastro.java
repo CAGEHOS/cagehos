@@ -7,10 +7,6 @@ import cagehos.lib.Address;
 import cagehos.lib.Doctor;
 import cagehos.lib.Employee;
 import cagehos.lib.Patient;
-import static cagehos.lib.util.InterfaceBackbone.validateNumberField;
-import static cagehos.lib.util.InterfaceBackbone.validateNameField;
-import static cagehos.lib.util.InterfaceBackbone.validateAddressField;
-import static cagehos.lib.util.InterfaceBackbone.validateAddressComplementField;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -20,10 +16,19 @@ import java.sql.ResultSet;
 import javax.swing.JOptionPane;
 
 public class TelaCadastro extends javax.swing.JFrame {
-    public TelaCadastro(int tipoCadastro, boolean editMode) {
+    private final String[] TIPO_CADASTRO_STRING = {
+        "paciente",
+        "medico",
+        "empregado",
+    };
+    
+    private int tipoCadastro = 0;
+    
+    public TelaCadastro(int tipoCadastro, boolean editMode, ResultSet info) {
         initComponents();
-        //centraliza TelaCadastro, fica exatamente no centro da tela
         this.setLocationRelativeTo(null);
+        
+        this.tipoCadastro = tipoCadastro;
         
         if (tipoCadastro == 0) {
             mTabCadastro.removeTabAt(2);
@@ -53,24 +58,98 @@ public class TelaCadastro extends javax.swing.JFrame {
         }
         
         if (!editMode) {
-            // aparece só quando campos estiverem bloqueados
             btEdit.setVisible(false);
+            btDelete.setVisible(false);
+        } else {
+            btFinish1.setVisible(false);
+            btFinish2.setVisible(false);
+            btFinish3.setVisible(false);
+            
+            tfPersonName.setEditable(false);
+            tfBirthday.setEditable(false);
+            tfCPF.setEditable(false);
+            cbIDType.setEditable(false);
+            tfIDNumber.setEditable(false);
+            cbSexType.setEditable(false);
+            cbMaritalStatus.setEditable(false);
+            tfCityName.setEditable(false);
+            cbState.setEditable(false);
+            tfCEP.setEditable(false);
+            tfAddressName.setEditable(false);
+            tfAddressNumber.setEditable(false);
+            tfAddressDistrict.setEditable(false);
+            tfAddressComplement.setEditable(false);
+            
+            if (tipoCadastro == 0){
+                cbBloodType.setEditable(false);
+                cbPrefDoctor.setEditable(false);
+                tfPatientObservations.setEditable(false);
+            }
+
+            if (tipoCadastro == 1){
+                tfDoctorCRM.setEditable(false);
+                cbDoctorSpecialTreatment.setEditable(false);
+                tfDoctorObservations.setEditable(false);
+            }
+
+            if (tipoCadastro == 2){
+                tfEmployeeSection.setEditable(false);
+                tfEmployeeFunction.setEditable(false);
+                tfEmployeeObservations.setEditable(false);
+            }
+        }
+        
+        if (info != null) {
+            try {
+                if (info.next()) {
+
+                    tfPersonName.setText(info.getString("nome"));
+                    tfBirthday.setText(info.getString("data_nascimento"));
+                    tfCPF.setText(info.getString("cpf"));
+                    cbIDType.setSelectedItem(info.getString("tipo_id"));
+                    tfIDNumber.setText(info.getString("numero_id"));
+                    cbSexType.setSelectedItem(info.getString("sexo"));
+                    cbMaritalStatus.setSelectedItem(info.getString("estado_civil"));
+                    tfCityName.setText(info.getString("cidade"));
+                    cbState.setSelectedItem(info.getString("estado"));
+                    tfCEP.setText(info.getString("cep"));
+                    tfAddressName.setText(info.getString("logradouro"));
+                    tfAddressNumber.setText(info.getString("numero"));
+                    tfAddressDistrict.setText(info.getString("bairro"));
+                    tfAddressComplement.setText(info.getString("complemento"));                    
+
+                    if (tipoCadastro == 0){
+                        cbBloodType.setSelectedItem(info.getString("tipo_sanguineo"));
+                        cbPrefDoctor.setSelectedItem(info.getString("medico_preferencial"));
+                        tfPatientObservations.setText(info.getString("observacoes"));
+                    }
+
+                    if (tipoCadastro == 1){
+                        tfDoctorCRM.setText(info.getString("crm"));
+                        cbDoctorSpecialTreatment.setSelectedItem(info.getString("pron_tratamento"));
+                        tfDoctorObservations.setText(info.getString("area_especialidades"));
+                    }
+
+                    if (tipoCadastro == 2){
+                        tfEmployeeSection.setText(info.getString("setor"));
+                        tfEmployeeFunction.setText(info.getString("cargo"));
+                        tfEmployeeObservations.setText(info.getString("area_especialidades"));
+                    }
+                }
+            } catch (SQLException e) {
+                e.printStackTrace(System.out);
+            }
         }
     }
 
-    /**
-     * This method is called from within the constructor to initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is always
-     * regenerated by the Form Editor.
-     */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
         mTabCadastro = new javax.swing.JTabbedPane();
         pGeneraInfo = new javax.swing.JPanel();
-        jPanel5 = new javax.swing.JPanel();
-        jPanel2 = new javax.swing.JPanel();
+        pMainInfo = new javax.swing.JPanel();
+        InsertionInformationPanel2 = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
         tfCPF = new javax.swing.JFormattedTextField();
         jLabel4 = new javax.swing.JLabel();
@@ -86,31 +165,32 @@ public class TelaCadastro extends javax.swing.JFrame {
         tfPersonName = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
         tfBirthday = new javax.swing.JFormattedTextField();
-        jPanel6 = new javax.swing.JPanel();
-        jPanel7 = new javax.swing.JPanel();
+        pAddressInfo = new javax.swing.JPanel();
+        InsertionInformationPanel3 = new javax.swing.JPanel();
         jLabel8 = new javax.swing.JLabel();
         tfCityName = new javax.swing.JTextField();
         jLabel9 = new javax.swing.JLabel();
         cbState = new javax.swing.JComboBox();
         jLabel10 = new javax.swing.JLabel();
         tfCEP = new javax.swing.JFormattedTextField();
-        jPanel8 = new javax.swing.JPanel();
+        InsertionInformationPanel4 = new javax.swing.JPanel();
         jLabel11 = new javax.swing.JLabel();
         tfAddressName = new javax.swing.JTextField();
         jLabel12 = new javax.swing.JLabel();
         tfAddressNumber = new javax.swing.JTextField();
-        jPanel9 = new javax.swing.JPanel();
+        InsertionInformationPanel5 = new javax.swing.JPanel();
         jLabel13 = new javax.swing.JLabel();
         tfAddressComplement = new javax.swing.JTextField();
         tfAddressDistrict = new javax.swing.JTextField();
         jLabel25 = new javax.swing.JLabel();
-        jPanel10 = new javax.swing.JPanel();
+        pButtons = new javax.swing.JPanel();
+        btDelete = new javax.swing.JButton();
         btEdit = new javax.swing.JButton();
         btCancel1 = new javax.swing.JButton();
         btNext = new javax.swing.JButton();
         pPacTab = new javax.swing.JPanel();
-        jPanel15 = new javax.swing.JPanel();
-        jPanel17 = new javax.swing.JPanel();
+        pPatientInfo = new javax.swing.JPanel();
+        InsertionInformationPanel1 = new javax.swing.JPanel();
         jLabel21 = new javax.swing.JLabel();
         cbBloodType = new javax.swing.JComboBox();
         jLabel23 = new javax.swing.JLabel();
@@ -118,12 +198,12 @@ public class TelaCadastro extends javax.swing.JFrame {
         jLabel24 = new javax.swing.JLabel();
         jScrollPane3 = new javax.swing.JScrollPane();
         tfPatientObservations = new javax.swing.JTextArea();
-        jPanel20 = new javax.swing.JPanel();
+        pButtons2Page = new javax.swing.JPanel();
         btCancel4 = new javax.swing.JButton();
         btFinish3 = new javax.swing.JButton();
         pFunTab = new javax.swing.JPanel();
-        jPanel4 = new javax.swing.JPanel();
-        jPanel16 = new javax.swing.JPanel();
+        InsertionInformationPanel6 = new javax.swing.JPanel();
+        InsertionInformationPanel8 = new javax.swing.JPanel();
         jLabel18 = new javax.swing.JLabel();
         tfEmployeeSection = new javax.swing.JTextField();
         jLabel19 = new javax.swing.JLabel();
@@ -131,12 +211,12 @@ public class TelaCadastro extends javax.swing.JFrame {
         jLabel20 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
         tfEmployeeObservations = new javax.swing.JTextArea();
-        jPanel19 = new javax.swing.JPanel();
+        InsertionInformationPanel7 = new javax.swing.JPanel();
         btCancel3 = new javax.swing.JButton();
         btFinish2 = new javax.swing.JButton();
         pMedTab = new javax.swing.JPanel();
-        jPanel13 = new javax.swing.JPanel();
-        jPanel14 = new javax.swing.JPanel();
+        InsertionInformationPanel9 = new javax.swing.JPanel();
+        InsertionInformationPanel11 = new javax.swing.JPanel();
         jLabel15 = new javax.swing.JLabel();
         tfDoctorCRM = new javax.swing.JTextField();
         jLabel16 = new javax.swing.JLabel();
@@ -144,16 +224,16 @@ public class TelaCadastro extends javax.swing.JFrame {
         jLabel17 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tfDoctorObservations = new javax.swing.JTextArea();
-        jPanel18 = new javax.swing.JPanel();
+        InsertionInformationPanel10 = new javax.swing.JPanel();
         btCancel2 = new javax.swing.JButton();
         btFinish1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setResizable(false);
 
-        jPanel5.setBorder(javax.swing.BorderFactory.createTitledBorder("Dados Principais"));
+        pMainInfo.setBorder(javax.swing.BorderFactory.createTitledBorder("Dados Principais"));
 
-        jPanel2.setPreferredSize(new java.awt.Dimension(699, 29));
+        InsertionInformationPanel2.setPreferredSize(new java.awt.Dimension(699, 29));
 
         jLabel3.setText("CPF:");
 
@@ -183,11 +263,11 @@ public class TelaCadastro extends javax.swing.JFrame {
 
         cbIDType.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "RG", "CNH", "CT", "CIP" }));
 
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
+        javax.swing.GroupLayout InsertionInformationPanel2Layout = new javax.swing.GroupLayout(InsertionInformationPanel2);
+        InsertionInformationPanel2.setLayout(InsertionInformationPanel2Layout);
+        InsertionInformationPanel2Layout.setHorizontalGroup(
+            InsertionInformationPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(InsertionInformationPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -210,9 +290,9 @@ public class TelaCadastro extends javax.swing.JFrame {
                 .addComponent(cbMaritalStatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0))
         );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+        InsertionInformationPanel2Layout.setVerticalGroup(
+            InsertionInformationPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(InsertionInformationPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                 .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, 29, Short.MAX_VALUE)
                 .addComponent(tfCPF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addComponent(jLabel4)
@@ -266,22 +346,22 @@ public class TelaCadastro extends javax.swing.JFrame {
                 .addComponent(tfBirthday, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
-        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
-        jPanel5.setLayout(jPanel5Layout);
-        jPanel5Layout.setHorizontalGroup(
-            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        javax.swing.GroupLayout pMainInfoLayout = new javax.swing.GroupLayout(pMainInfo);
+        pMainInfo.setLayout(pMainInfoLayout);
+        pMainInfoLayout.setHorizontalGroup(
+            pMainInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, 801, Short.MAX_VALUE)
+            .addComponent(InsertionInformationPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, 801, Short.MAX_VALUE)
         );
-        jPanel5Layout.setVerticalGroup(
-            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel5Layout.createSequentialGroup()
+        pMainInfoLayout.setVerticalGroup(
+            pMainInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pMainInfoLayout.createSequentialGroup()
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(InsertionInformationPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
-        jPanel6.setBorder(javax.swing.BorderFactory.createTitledBorder("Endereço"));
+        pAddressInfo.setBorder(javax.swing.BorderFactory.createTitledBorder("Endereço"));
 
         jLabel8.setText("Cidade:");
 
@@ -304,11 +384,11 @@ public class TelaCadastro extends javax.swing.JFrame {
             ex.printStackTrace();
         }
 
-        javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
-        jPanel7.setLayout(jPanel7Layout);
-        jPanel7Layout.setHorizontalGroup(
-            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel7Layout.createSequentialGroup()
+        javax.swing.GroupLayout InsertionInformationPanel3Layout = new javax.swing.GroupLayout(InsertionInformationPanel3);
+        InsertionInformationPanel3.setLayout(InsertionInformationPanel3Layout);
+        InsertionInformationPanel3Layout.setHorizontalGroup(
+            InsertionInformationPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(InsertionInformationPanel3Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -323,9 +403,9 @@ public class TelaCadastro extends javax.swing.JFrame {
                 .addComponent(tfCEP, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-        jPanel7Layout.setVerticalGroup(
-            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+        InsertionInformationPanel3Layout.setVerticalGroup(
+            InsertionInformationPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(InsertionInformationPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                 .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addComponent(tfCityName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addComponent(jLabel9)
@@ -351,11 +431,11 @@ public class TelaCadastro extends javax.swing.JFrame {
             }
         });
 
-        javax.swing.GroupLayout jPanel8Layout = new javax.swing.GroupLayout(jPanel8);
-        jPanel8.setLayout(jPanel8Layout);
-        jPanel8Layout.setHorizontalGroup(
-            jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel8Layout.createSequentialGroup()
+        javax.swing.GroupLayout InsertionInformationPanel4Layout = new javax.swing.GroupLayout(InsertionInformationPanel4);
+        InsertionInformationPanel4.setLayout(InsertionInformationPanel4Layout);
+        InsertionInformationPanel4Layout.setHorizontalGroup(
+            InsertionInformationPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(InsertionInformationPanel4Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel11)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -366,9 +446,9 @@ public class TelaCadastro extends javax.swing.JFrame {
                 .addComponent(tfAddressNumber)
                 .addContainerGap())
         );
-        jPanel8Layout.setVerticalGroup(
-            jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+        InsertionInformationPanel4Layout.setVerticalGroup(
+            InsertionInformationPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(InsertionInformationPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                 .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addComponent(tfAddressName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addComponent(jLabel12)
@@ -393,11 +473,11 @@ public class TelaCadastro extends javax.swing.JFrame {
 
         jLabel25.setText("Bairro:");
 
-        javax.swing.GroupLayout jPanel9Layout = new javax.swing.GroupLayout(jPanel9);
-        jPanel9.setLayout(jPanel9Layout);
-        jPanel9Layout.setHorizontalGroup(
-            jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel9Layout.createSequentialGroup()
+        javax.swing.GroupLayout InsertionInformationPanel5Layout = new javax.swing.GroupLayout(InsertionInformationPanel5);
+        InsertionInformationPanel5.setLayout(InsertionInformationPanel5Layout);
+        InsertionInformationPanel5Layout.setHorizontalGroup(
+            InsertionInformationPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(InsertionInformationPanel5Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel25)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -408,39 +488,53 @@ public class TelaCadastro extends javax.swing.JFrame {
                 .addComponent(tfAddressComplement, javax.swing.GroupLayout.PREFERRED_SIZE, 184, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-        jPanel9Layout.setVerticalGroup(
-            jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+        InsertionInformationPanel5Layout.setVerticalGroup(
+            InsertionInformationPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(InsertionInformationPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                 .addComponent(jLabel13, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addComponent(tfAddressComplement, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addComponent(tfAddressDistrict, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addComponent(jLabel25, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
-        javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
-        jPanel6.setLayout(jPanel6Layout);
-        jPanel6Layout.setHorizontalGroup(
-            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(jPanel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(jPanel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        javax.swing.GroupLayout pAddressInfoLayout = new javax.swing.GroupLayout(pAddressInfo);
+        pAddressInfo.setLayout(pAddressInfoLayout);
+        pAddressInfoLayout.setHorizontalGroup(
+            pAddressInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(InsertionInformationPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(InsertionInformationPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(InsertionInformationPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
-        jPanel6Layout.setVerticalGroup(
-            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel6Layout.createSequentialGroup()
-                .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+        pAddressInfoLayout.setVerticalGroup(
+            pAddressInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pAddressInfoLayout.createSequentialGroup()
+                .addComponent(InsertionInformationPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(InsertionInformationPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(InsertionInformationPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(16, Short.MAX_VALUE))
         );
 
-        jPanel10.setLayout(new java.awt.GridLayout(1, 3, 5, 5));
+        pButtons.setLayout(new java.awt.GridLayout(1, 3, 5, 5));
+
+        btDelete.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cagehos/img/ic_highlight_off_black_48dp_1x.png"))); // NOI18N
+        btDelete.setText("Excluir");
+        btDelete.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btDeleteActionPerformed(evt);
+            }
+        });
+        pButtons.add(btDelete);
 
         btEdit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cagehos/img/ic_edit_black_48dp_1x.png"))); // NOI18N
         btEdit.setText("Editar");
-        jPanel10.add(btEdit);
+        btEdit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btEditActionPerformed(evt);
+            }
+        });
+        pButtons.add(btEdit);
 
         btCancel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cagehos/img/ic_close_black_48dp_1x.png"))); // NOI18N
         btCancel1.setText("Cancelar");
@@ -449,7 +543,7 @@ public class TelaCadastro extends javax.swing.JFrame {
                 btCancel1ActionPerformed(evt);
             }
         });
-        jPanel10.add(btCancel1);
+        pButtons.add(btCancel1);
 
         btNext.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cagehos/img/ic_keyboard_arrow_right_black_48dp_1x.png"))); // NOI18N
         btNext.setText("Avançar");
@@ -462,7 +556,7 @@ public class TelaCadastro extends javax.swing.JFrame {
                 btNextActionPerformed(evt);
             }
         });
-        jPanel10.add(btNext);
+        pButtons.add(btNext);
 
         javax.swing.GroupLayout pGeneraInfoLayout = new javax.swing.GroupLayout(pGeneraInfo);
         pGeneraInfo.setLayout(pGeneraInfoLayout);
@@ -473,26 +567,26 @@ public class TelaCadastro extends javax.swing.JFrame {
                 .addGroup(pGeneraInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(pGeneraInfoLayout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jPanel10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jPanel5, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel6, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(pButtons, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(pMainInfo, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(pAddressInfo, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         pGeneraInfoLayout.setVerticalGroup(
             pGeneraInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pGeneraInfoLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(pMainInfo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(pAddressInfo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jPanel10, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(pButtons, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(10, 10, 10))
         );
 
         mTabCadastro.addTab("Dados Gerais", pGeneraInfo);
 
-        jPanel15.setBorder(javax.swing.BorderFactory.createTitledBorder("Dados do Paciente"));
+        pPatientInfo.setBorder(javax.swing.BorderFactory.createTitledBorder("Dados do Paciente"));
 
         jLabel21.setText("Tipo Sanguíneo:");
 
@@ -506,20 +600,20 @@ public class TelaCadastro extends javax.swing.JFrame {
         tfPatientObservations.setRows(5);
         jScrollPane3.setViewportView(tfPatientObservations);
 
-        javax.swing.GroupLayout jPanel17Layout = new javax.swing.GroupLayout(jPanel17);
-        jPanel17.setLayout(jPanel17Layout);
-        jPanel17Layout.setHorizontalGroup(
-            jPanel17Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel17Layout.createSequentialGroup()
+        javax.swing.GroupLayout InsertionInformationPanel1Layout = new javax.swing.GroupLayout(InsertionInformationPanel1);
+        InsertionInformationPanel1.setLayout(InsertionInformationPanel1Layout);
+        InsertionInformationPanel1Layout.setHorizontalGroup(
+            InsertionInformationPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(InsertionInformationPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel17Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel17Layout.createSequentialGroup()
+                .addGroup(InsertionInformationPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(InsertionInformationPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel24)
                         .addGap(557, 724, Short.MAX_VALUE))
-                    .addGroup(jPanel17Layout.createSequentialGroup()
-                        .addGroup(jPanel17Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(InsertionInformationPanel1Layout.createSequentialGroup()
+                        .addGroup(InsertionInformationPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jScrollPane3)
-                            .addGroup(jPanel17Layout.createSequentialGroup()
+                            .addGroup(InsertionInformationPanel1Layout.createSequentialGroup()
                                 .addComponent(jLabel21)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(cbBloodType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -530,10 +624,10 @@ public class TelaCadastro extends javax.swing.JFrame {
                                 .addGap(0, 0, Short.MAX_VALUE)))
                         .addContainerGap())))
         );
-        jPanel17Layout.setVerticalGroup(
-            jPanel17Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel17Layout.createSequentialGroup()
-                .addGroup(jPanel17Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+        InsertionInformationPanel1Layout.setVerticalGroup(
+            InsertionInformationPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(InsertionInformationPanel1Layout.createSequentialGroup()
+                .addGroup(InsertionInformationPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel21, javax.swing.GroupLayout.DEFAULT_SIZE, 29, Short.MAX_VALUE)
                     .addComponent(cbBloodType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel23)
@@ -544,20 +638,20 @@ public class TelaCadastro extends javax.swing.JFrame {
                 .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
-        javax.swing.GroupLayout jPanel15Layout = new javax.swing.GroupLayout(jPanel15);
-        jPanel15.setLayout(jPanel15Layout);
-        jPanel15Layout.setHorizontalGroup(
-            jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel17, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        javax.swing.GroupLayout pPatientInfoLayout = new javax.swing.GroupLayout(pPatientInfo);
+        pPatientInfo.setLayout(pPatientInfoLayout);
+        pPatientInfoLayout.setHorizontalGroup(
+            pPatientInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(InsertionInformationPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
-        jPanel15Layout.setVerticalGroup(
-            jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel15Layout.createSequentialGroup()
-                .addComponent(jPanel17, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+        pPatientInfoLayout.setVerticalGroup(
+            pPatientInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pPatientInfoLayout.createSequentialGroup()
+                .addComponent(InsertionInformationPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(10, 10, 10))
         );
 
-        jPanel20.setLayout(new java.awt.GridLayout(1, 3, 5, 5));
+        pButtons2Page.setLayout(new java.awt.GridLayout(1, 3, 5, 5));
 
         btCancel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cagehos/img/ic_close_black_48dp_1x.png"))); // NOI18N
         btCancel4.setText("Cancelar");
@@ -566,7 +660,7 @@ public class TelaCadastro extends javax.swing.JFrame {
                 btCancel4ActionPerformed(evt);
             }
         });
-        jPanel20.add(btCancel4);
+        pButtons2Page.add(btCancel4);
 
         btFinish3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cagehos/img/ic_done_black_48dp_1x.png"))); // NOI18N
         btFinish3.setText("Concluir");
@@ -575,7 +669,7 @@ public class TelaCadastro extends javax.swing.JFrame {
                 btFinish3ActionPerformed(evt);
             }
         });
-        jPanel20.add(btFinish3);
+        pButtons2Page.add(btFinish3);
 
         javax.swing.GroupLayout pPacTabLayout = new javax.swing.GroupLayout(pPacTab);
         pPacTab.setLayout(pPacTabLayout);
@@ -584,35 +678,35 @@ public class TelaCadastro extends javax.swing.JFrame {
             .addGroup(pPacTabLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(pPacTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel15, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(pPatientInfo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pPacTabLayout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jPanel20, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(pButtons2Page, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         pPacTabLayout.setVerticalGroup(
             pPacTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pPacTabLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel15, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(pPatientInfo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 48, Short.MAX_VALUE)
-                .addComponent(jPanel20, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(pButtons2Page, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(10, 10, 10))
         );
 
         mTabCadastro.addTab("Dados Hospitalares", pPacTab);
 
-        jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder("Dados do Funcionário"));
+        InsertionInformationPanel6.setBorder(javax.swing.BorderFactory.createTitledBorder("Dados do Funcionário"));
 
         jLabel18.setText("Setor:");
 
         jLabel19.setText("Cargo:");
 
-        javax.swing.GroupLayout jPanel16Layout = new javax.swing.GroupLayout(jPanel16);
-        jPanel16.setLayout(jPanel16Layout);
-        jPanel16Layout.setHorizontalGroup(
-            jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel16Layout.createSequentialGroup()
+        javax.swing.GroupLayout InsertionInformationPanel8Layout = new javax.swing.GroupLayout(InsertionInformationPanel8);
+        InsertionInformationPanel8.setLayout(InsertionInformationPanel8Layout);
+        InsertionInformationPanel8Layout.setHorizontalGroup(
+            InsertionInformationPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(InsertionInformationPanel8Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel18)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -623,9 +717,9 @@ public class TelaCadastro extends javax.swing.JFrame {
                 .addComponent(tfEmployeeFunction, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(490, Short.MAX_VALUE))
         );
-        jPanel16Layout.setVerticalGroup(
-            jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+        InsertionInformationPanel8Layout.setVerticalGroup(
+            InsertionInformationPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(InsertionInformationPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                 .addComponent(jLabel18, javax.swing.GroupLayout.DEFAULT_SIZE, 29, Short.MAX_VALUE)
                 .addComponent(tfEmployeeSection, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addComponent(jLabel19)
@@ -638,24 +732,24 @@ public class TelaCadastro extends javax.swing.JFrame {
         tfEmployeeObservations.setRows(5);
         jScrollPane2.setViewportView(tfEmployeeObservations);
 
-        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
-        jPanel4.setLayout(jPanel4Layout);
-        jPanel4Layout.setHorizontalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel16, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addGroup(jPanel4Layout.createSequentialGroup()
+        javax.swing.GroupLayout InsertionInformationPanel6Layout = new javax.swing.GroupLayout(InsertionInformationPanel6);
+        InsertionInformationPanel6.setLayout(InsertionInformationPanel6Layout);
+        InsertionInformationPanel6Layout.setHorizontalGroup(
+            InsertionInformationPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(InsertionInformationPanel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(InsertionInformationPanel6Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(InsertionInformationPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane2)
-                    .addGroup(jPanel4Layout.createSequentialGroup()
+                    .addGroup(InsertionInformationPanel6Layout.createSequentialGroup()
                         .addComponent(jLabel20)
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
-        jPanel4Layout.setVerticalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel4Layout.createSequentialGroup()
-                .addComponent(jPanel16, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+        InsertionInformationPanel6Layout.setVerticalGroup(
+            InsertionInformationPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(InsertionInformationPanel6Layout.createSequentialGroup()
+                .addComponent(InsertionInformationPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(5, 5, 5)
                 .addComponent(jLabel20)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -663,7 +757,7 @@ public class TelaCadastro extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jPanel19.setLayout(new java.awt.GridLayout(1, 3, 5, 5));
+        InsertionInformationPanel7.setLayout(new java.awt.GridLayout(1, 3, 5, 5));
 
         btCancel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cagehos/img/ic_close_black_48dp_1x.png"))); // NOI18N
         btCancel3.setText("Cancelar");
@@ -672,7 +766,7 @@ public class TelaCadastro extends javax.swing.JFrame {
                 btCancel3ActionPerformed(evt);
             }
         });
-        jPanel19.add(btCancel3);
+        InsertionInformationPanel7.add(btCancel3);
 
         btFinish2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cagehos/img/ic_done_black_48dp_1x.png"))); // NOI18N
         btFinish2.setText("Concluir");
@@ -681,7 +775,7 @@ public class TelaCadastro extends javax.swing.JFrame {
                 btFinish2ActionPerformed(evt);
             }
         });
-        jPanel19.add(btFinish2);
+        InsertionInformationPanel7.add(btFinish2);
 
         javax.swing.GroupLayout pFunTabLayout = new javax.swing.GroupLayout(pFunTab);
         pFunTab.setLayout(pFunTabLayout);
@@ -690,25 +784,25 @@ public class TelaCadastro extends javax.swing.JFrame {
             .addGroup(pFunTabLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(pFunTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(InsertionInformationPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pFunTabLayout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jPanel19, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(InsertionInformationPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         pFunTabLayout.setVerticalGroup(
             pFunTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pFunTabLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(InsertionInformationPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 48, Short.MAX_VALUE)
-                .addComponent(jPanel19, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(InsertionInformationPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(10, 10, 10))
         );
 
         mTabCadastro.addTab("Dados do Funcionário", pFunTab);
 
-        jPanel13.setBorder(javax.swing.BorderFactory.createTitledBorder("Dados do Médico"));
+        InsertionInformationPanel9.setBorder(javax.swing.BorderFactory.createTitledBorder("Dados do Médico"));
 
         jLabel15.setText("CRM:");
 
@@ -716,11 +810,11 @@ public class TelaCadastro extends javax.swing.JFrame {
 
         cbDoctorSpecialTreatment.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Méd.", "Dr.", "Dra." }));
 
-        javax.swing.GroupLayout jPanel14Layout = new javax.swing.GroupLayout(jPanel14);
-        jPanel14.setLayout(jPanel14Layout);
-        jPanel14Layout.setHorizontalGroup(
-            jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel14Layout.createSequentialGroup()
+        javax.swing.GroupLayout InsertionInformationPanel11Layout = new javax.swing.GroupLayout(InsertionInformationPanel11);
+        InsertionInformationPanel11.setLayout(InsertionInformationPanel11Layout);
+        InsertionInformationPanel11Layout.setHorizontalGroup(
+            InsertionInformationPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(InsertionInformationPanel11Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel15)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -731,9 +825,9 @@ public class TelaCadastro extends javax.swing.JFrame {
                 .addComponent(cbDoctorSpecialTreatment, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(495, Short.MAX_VALUE))
         );
-        jPanel14Layout.setVerticalGroup(
-            jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+        InsertionInformationPanel11Layout.setVerticalGroup(
+            InsertionInformationPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(InsertionInformationPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                 .addComponent(jLabel15, javax.swing.GroupLayout.DEFAULT_SIZE, 29, Short.MAX_VALUE)
                 .addComponent(tfDoctorCRM, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addComponent(jLabel16)
@@ -746,24 +840,24 @@ public class TelaCadastro extends javax.swing.JFrame {
         tfDoctorObservations.setRows(5);
         jScrollPane1.setViewportView(tfDoctorObservations);
 
-        javax.swing.GroupLayout jPanel13Layout = new javax.swing.GroupLayout(jPanel13);
-        jPanel13.setLayout(jPanel13Layout);
-        jPanel13Layout.setHorizontalGroup(
-            jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel14, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addGroup(jPanel13Layout.createSequentialGroup()
+        javax.swing.GroupLayout InsertionInformationPanel9Layout = new javax.swing.GroupLayout(InsertionInformationPanel9);
+        InsertionInformationPanel9.setLayout(InsertionInformationPanel9Layout);
+        InsertionInformationPanel9Layout.setHorizontalGroup(
+            InsertionInformationPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(InsertionInformationPanel11, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(InsertionInformationPanel9Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(InsertionInformationPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane1)
-                    .addGroup(jPanel13Layout.createSequentialGroup()
+                    .addGroup(InsertionInformationPanel9Layout.createSequentialGroup()
                         .addComponent(jLabel17)
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
-        jPanel13Layout.setVerticalGroup(
-            jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel13Layout.createSequentialGroup()
-                .addComponent(jPanel14, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+        InsertionInformationPanel9Layout.setVerticalGroup(
+            InsertionInformationPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(InsertionInformationPanel9Layout.createSequentialGroup()
+                .addComponent(InsertionInformationPanel11, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(5, 5, 5)
                 .addComponent(jLabel17)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -771,7 +865,7 @@ public class TelaCadastro extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jPanel18.setLayout(new java.awt.GridLayout(1, 3, 5, 5));
+        InsertionInformationPanel10.setLayout(new java.awt.GridLayout(1, 3, 5, 5));
 
         btCancel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cagehos/img/ic_close_black_48dp_1x.png"))); // NOI18N
         btCancel2.setText("Cancelar");
@@ -780,7 +874,7 @@ public class TelaCadastro extends javax.swing.JFrame {
                 btCancel2ActionPerformed(evt);
             }
         });
-        jPanel18.add(btCancel2);
+        InsertionInformationPanel10.add(btCancel2);
 
         btFinish1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cagehos/img/ic_done_black_48dp_1x.png"))); // NOI18N
         btFinish1.setText("Concluir");
@@ -789,7 +883,7 @@ public class TelaCadastro extends javax.swing.JFrame {
                 btFinish1ActionPerformed(evt);
             }
         });
-        jPanel18.add(btFinish1);
+        InsertionInformationPanel10.add(btFinish1);
 
         javax.swing.GroupLayout pMedTabLayout = new javax.swing.GroupLayout(pMedTab);
         pMedTab.setLayout(pMedTabLayout);
@@ -798,19 +892,19 @@ public class TelaCadastro extends javax.swing.JFrame {
             .addGroup(pMedTabLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(pMedTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel13, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(InsertionInformationPanel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pMedTabLayout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jPanel18, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(InsertionInformationPanel10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         pMedTabLayout.setVerticalGroup(
             pMedTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pMedTabLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel13, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(InsertionInformationPanel9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 48, Short.MAX_VALUE)
-                .addComponent(jPanel18, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(InsertionInformationPanel10, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(10, 10, 10))
         );
 
@@ -1064,70 +1158,169 @@ public class TelaCadastro extends javax.swing.JFrame {
     }//GEN-LAST:event_btFinish3ActionPerformed
 
     private void tfPersonNameFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tfPersonNameFocusLost
-        validateNameField("Nome", tfPersonName, true);
+        cagehos.lib.util.InterfaceBackbone.validateNameField(
+            "Nome",
+            tfPersonName,
+            !tfPersonName.getText().equals("")
+        );
     }//GEN-LAST:event_tfPersonNameFocusLost
 
     private void tfIDNumberFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tfIDNumberFocusLost
-        validateNumberField("Número de RG", tfIDNumber, true);
+        cagehos.lib.util.InterfaceBackbone.validateNumberField(
+            "Número de RG",
+            tfIDNumber,
+            !tfIDNumber.getText().equals("")
+        );
     }//GEN-LAST:event_tfIDNumberFocusLost
 
     private void tfCityNameFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tfCityNameFocusLost
-        validateNameField("Cidade", tfCityName, !tfCityName.getText().equals(""));
+        cagehos.lib.util.InterfaceBackbone.validateNameField(
+            "Cidade",
+            tfCityName,
+            !tfCityName.getText().equals("")
+        );
     }//GEN-LAST:event_tfCityNameFocusLost
 
     private void tfAddressNameFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tfAddressNameFocusLost
-        validateAddressField("Logradouro", tfAddressName, !tfAddressName.getText().equals(""));
+        cagehos.lib.util.InterfaceBackbone.validateAddressField(
+            "Logradouro",
+            tfAddressName,
+            !tfAddressName.getText().equals("")
+        );
     }//GEN-LAST:event_tfAddressNameFocusLost
 
     private void tfAddressNumberFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tfAddressNumberFocusLost
-        validateNumberField("Número de Endereço", tfAddressNumber, !tfAddressNumber.getText().equals(""));
+        cagehos.lib.util.InterfaceBackbone.validateNumberField(
+            "Número de Endereço",
+            tfAddressNumber,
+            !tfAddressNumber.getText().equals("")
+        );
     }//GEN-LAST:event_tfAddressNumberFocusLost
 
     private void tfAddressDistrictFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tfAddressDistrictFocusLost
-        validateAddressComplementField("Bairro", tfAddressDistrict, !tfAddressDistrict.getText().equals(""));
+        cagehos.lib.util.InterfaceBackbone.validateAddressComplementField(
+            "Bairro",
+            tfAddressDistrict,
+            !tfAddressDistrict.getText().equals("")
+        );
     }//GEN-LAST:event_tfAddressDistrictFocusLost
 
     private void tfAddressComplementFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tfAddressComplementFocusLost
-        validateAddressComplementField("Complemento", tfAddressComplement, !tfAddressComplement.getText().equals(""));
+        cagehos.lib.util.InterfaceBackbone.validateAddressComplementField(
+            "Complemento",
+            tfAddressComplement,
+            !tfAddressComplement.getText().equals("")
+        );
     }//GEN-LAST:event_tfAddressComplementFocusLost
 
+    private void btEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btEditActionPerformed
+        btEdit.setVisible(false);
+        btDelete.setVisible(false);
+        
+        btFinish1.setVisible(true);
+        btFinish2.setVisible(true);
+        btFinish3.setVisible(true);
+
+        tfPersonName.setEditable(true);
+        tfBirthday.setEditable(true);
+        tfCPF.setEditable(true);
+        cbIDType.setEditable(true);
+        tfIDNumber.setEditable(true);
+        cbSexType.setEditable(true);
+        cbMaritalStatus.setEditable(true);
+        tfCityName.setEditable(true);
+        cbState.setEditable(true);
+        tfCEP.setEditable(true);
+        tfAddressName.setEditable(true);
+        tfAddressNumber.setEditable(true);
+        tfAddressDistrict.setEditable(true);
+        tfAddressComplement.setEditable(true);
+
+        if (tipoCadastro == 0){
+            cbBloodType.setEditable(true);
+            cbPrefDoctor.setEditable(true);
+            tfPatientObservations.setEditable(true);
+        }
+
+        if (tipoCadastro == 1){
+            tfDoctorCRM.setEditable(true);
+            cbDoctorSpecialTreatment.setEditable(true);
+            tfDoctorObservations.setEditable(true);
+        }
+
+        if (tipoCadastro == 2){
+            tfEmployeeSection.setEditable(true);
+            tfEmployeeFunction.setEditable(true);
+            tfEmployeeObservations.setEditable(true);
+        }
+    }//GEN-LAST:event_btEditActionPerformed
+
+    private void btDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btDeleteActionPerformed
+        final String[] options = {"Sim", "Não"};
+        
+        Integer ret = JOptionPane.showOptionDialog(
+                null,
+                "Deseja excluir essa entrada?",
+                "Exclusão de entrada",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                options,
+                options[1]
+        );
+        
+        if ("Sim".equals(options[Integer.valueOf(ret.toString())])) {
+            cagehos.lib.util.InterfaceBackbone.deleteFromDatabase(
+                TIPO_CADASTRO_STRING[tipoCadastro],
+                tfPersonName.getText()
+            );
+            
+            dispose();
+        }
+    }//GEN-LAST:event_btDeleteActionPerformed
+
+    @SuppressWarnings("ConvertToStringSwitch")
     public static void main(String args[]) {
-        /* Set the Windows look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
         try {
+            OUTER:
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Windows".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                } else if ("GTK+".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
+                if (null != info.getName()) {
+                    switch (info.getName()) {
+                        case "GTK+":
+                            javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                            break OUTER;
+                        case "Windows":
+                            javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                            break OUTER;
+                    }
                 }
             }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(TelaCadastro.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(TelaCadastro.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(TelaCadastro.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(TelaCadastro.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
-        //</editor-fold>
 
         java.awt.EventQueue.invokeLater(() -> {
-            new TelaCadastro(0, false).setVisible(true);
+            new TelaCadastro(0, false, null).setVisible(true);
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPanel InsertionInformationPanel1;
+    private javax.swing.JPanel InsertionInformationPanel10;
+    private javax.swing.JPanel InsertionInformationPanel11;
+    private javax.swing.JPanel InsertionInformationPanel2;
+    private javax.swing.JPanel InsertionInformationPanel3;
+    private javax.swing.JPanel InsertionInformationPanel4;
+    private javax.swing.JPanel InsertionInformationPanel5;
+    private javax.swing.JPanel InsertionInformationPanel6;
+    private javax.swing.JPanel InsertionInformationPanel7;
+    private javax.swing.JPanel InsertionInformationPanel8;
+    private javax.swing.JPanel InsertionInformationPanel9;
     private javax.swing.JButton btCancel1;
     private javax.swing.JButton btCancel2;
     private javax.swing.JButton btCancel3;
     private javax.swing.JButton btCancel4;
+    private javax.swing.JButton btDelete;
     private javax.swing.JButton btEdit;
     private javax.swing.JButton btFinish1;
     private javax.swing.JButton btFinish2;
@@ -1163,31 +1356,20 @@ public class TelaCadastro extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
-    private javax.swing.JPanel jPanel10;
-    private javax.swing.JPanel jPanel13;
-    private javax.swing.JPanel jPanel14;
-    private javax.swing.JPanel jPanel15;
-    private javax.swing.JPanel jPanel16;
-    private javax.swing.JPanel jPanel17;
-    private javax.swing.JPanel jPanel18;
-    private javax.swing.JPanel jPanel19;
-    private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel20;
     private javax.swing.JPanel jPanel3;
-    private javax.swing.JPanel jPanel4;
-    private javax.swing.JPanel jPanel5;
-    private javax.swing.JPanel jPanel6;
-    private javax.swing.JPanel jPanel7;
-    private javax.swing.JPanel jPanel8;
-    private javax.swing.JPanel jPanel9;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JTabbedPane mTabCadastro;
+    private javax.swing.JPanel pAddressInfo;
+    private javax.swing.JPanel pButtons;
+    private javax.swing.JPanel pButtons2Page;
     private javax.swing.JPanel pFunTab;
     private javax.swing.JPanel pGeneraInfo;
+    private javax.swing.JPanel pMainInfo;
     private javax.swing.JPanel pMedTab;
     private javax.swing.JPanel pPacTab;
+    private javax.swing.JPanel pPatientInfo;
     private javax.swing.JTextField tfAddressComplement;
     private javax.swing.JTextField tfAddressDistrict;
     private javax.swing.JTextField tfAddressName;
