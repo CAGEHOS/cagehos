@@ -270,7 +270,7 @@ public class Consultar extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btSearchQuery;
+    private static javax.swing.JButton btSearchQuery;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel lbTipoDeCadastro;

@@ -2,6 +2,10 @@ package cagehos.lib.util;
 
 import cagehos.bd.ConnectionBD;
 import cagehos.exc.InvalidFieldException;
+import cagehos.lib.Address;
+import cagehos.lib.Doctor;
+import cagehos.lib.Employee;
+import cagehos.lib.Patient;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -10,6 +14,7 @@ import java.sql.SQLException;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import javax.swing.JComboBox;
 
 import javax.swing.JOptionPane;
 import javax.swing.JRadioButton;
@@ -18,6 +23,29 @@ import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
 public class InterfaceBackbone {
+    private static final String INSERT_PATIENT_DBPATH = "INSERT INTO paciente"
+            + " (nome, cpf, tipo_id, numero_id, sexo, estado_civil, cidade, "
+            + "estado, cep, logradouro, numero, bairro, complemento, "
+            + "tipo_sanguineo, medico_preferencial, observacoes, "
+            + "data_nascimento) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?,"
+            + " ?, ?, ?, ?, ?, ?, ?, ?)";
+    private static final String INSERT_EMPLOYEE_DBPATH = "INSERT INTO empregado"
+            + " (nome, cpf, tipo_id, numero_id, sexo, estado_civil, cidade,"
+            + " estado, cep, logradouro, numero, bairro, complemento, setor,"
+            + " cargo, area_especialidades, data_nascimento) VALUES (?, ?, ?,"
+            + " ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    private static final String INSERT_DOCTOR_DBPATH = "INSERT INTO medico"
+            + " (nome, cpf, tipo_id, numero_id, sexo, estado_civil, cidade, "
+            + "estado, cep, logradouro, numero, bairro, complemento, crm, "
+            + "pron_tratamento, area_especialidades, data_nascimento) "
+            + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    
+    
+    private static ConnectionBD conector = null;
+    private static Connection conexao = null;
+    private static PreparedStatement cmdParam = null;
+    
+    
     public static void validateNameField(
             String name,
             JTextField field,
@@ -167,11 +195,11 @@ public class InterfaceBackbone {
         );
         
         try {            
-            ConnectionBD conector = new ConnectionBD();
-            Connection conexao = conector.getConexao();
+            conector = new ConnectionBD();
+            conexao = conector.getConexao();
 
-            PreparedStatement searchParam = conexao.prepareStatement(search);
-            ResultSet resultadoConsulta = searchParam.executeQuery();
+            cmdParam = conexao.prepareStatement(search);
+            ResultSet resultadoConsulta = cmdParam.executeQuery();
 
             ArrayList<String[]>  lista = new ArrayList<>();
 
@@ -226,8 +254,6 @@ public class InterfaceBackbone {
         JRadioButton rbEmployee,
         JRadioButton rbPatient
     ) {
-        ArrayList<String> lista = new ArrayList<>();
-        
         if (evt.getClickCount() == 1) {
             final int mousePositionY = evt.getPoint().y;
             final int rowTotalHeight = (tableSearchResults.getRowHeight() +
@@ -256,12 +282,11 @@ public class InterfaceBackbone {
             );
             
             try {            
-                ConnectionBD conector = new ConnectionBD();
-                Connection conexao = conector.getConexao();
-                PreparedStatement searchParam = conexao.prepareStatement(
-                    rowSelected);
+                conector = new ConnectionBD();
+                conexao = conector.getConexao();
+                cmdParam = conexao.prepareStatement(rowSelected);
 
-                return searchParam.executeQuery();
+                return cmdParam.executeQuery();
             } catch (SQLException e){
                 e.printStackTrace(System.out);
             }
@@ -270,23 +295,126 @@ public class InterfaceBackbone {
         return null;
     }
     
-    public static void deleteFromDatabase(String table, String name) {
-        if (name.length() > 0) {
+    public static void deleteFromDatabase(String table, String cpf) {
+        if (cpf.length() > 0) {
             String path = String.format(
-                "DELETE FROM %s WHERE nome=?",
+                "DELETE FROM %s WHERE cpf=?",
                 table
             );
             
-            ConnectionBD conector = new ConnectionBD();
-            Connection conexao = conector.getConexao();
+            conector = new ConnectionBD();
+            conexao = conector.getConexao();
 
             try {
-                PreparedStatement searchParam = conexao.prepareStatement(path);
-                searchParam.setString(1, name);
-                searchParam.executeUpdate();
+                cmdParam = conexao.prepareStatement(path);
+                cmdParam.setString(1, cpf);
+                cmdParam.executeUpdate();
             } catch (SQLException e) {
                 e.printStackTrace(System.out);
             }
+        }
+    }
+    
+    public static void insertDoctor(Doctor entry, Address entryAddress) {
+        try {
+            // verificar se existe no banco de dados e entao inserir
+            
+            // insere dados
+            conector = new ConnectionBD();
+            conexao = conector.getConexao();
+            cmdParam = conexao.prepareStatement(INSERT_DOCTOR_DBPATH);
+
+            cmdParam.setString(1, entry.getName());
+            cmdParam.setString(2, entry.getCPF().toString(true));                
+            cmdParam.setString(3, entry.getIDType());
+            cmdParam.setString(4, entry.getIDNumber());
+            cmdParam.setString(5, entry.getGender());
+            cmdParam.setString(6, entry.getMaritalStatus());
+            cmdParam.setString(7, entryAddress.getCityName());
+            cmdParam.setString(8, entryAddress.getStateName());
+            cmdParam.setString(9, entryAddress.getZipCode());
+            cmdParam.setString(10, entryAddress.getName());
+            cmdParam.setString(11, String.valueOf(entryAddress.getNumber()));
+            cmdParam.setString(12, entryAddress.getDistrict());
+            cmdParam.setString(13, entryAddress.getComplement());
+            cmdParam.setString(14, String.valueOf(entry.getCRM()));
+            cmdParam.setString(15, entry.getTreatment());
+            cmdParam.setString(16, entry.getObservations());
+            cmdParam.setString(17, entry.getBirthDate());
+            
+            cmdParam.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace(System.out);
+        }
+    }
+    
+    public static void insertEmployee(Employee entry, Address entryAddress) {
+        try {
+            // verificar se existe no banco de dados e entao inserir
+            
+            // insere dados
+            conector = new ConnectionBD();
+            conexao = conector.getConexao();
+            cmdParam = conexao.prepareStatement(INSERT_EMPLOYEE_DBPATH);
+
+            cmdParam.setString(1, entry.getName());
+            cmdParam.setString(2, entry.getCPF().toString(true));                
+            cmdParam.setString(3, entry.getIDType());
+            cmdParam.setString(4, entry.getIDNumber());
+            cmdParam.setString(5, entry.getGender());
+            cmdParam.setString(6, entry.getMaritalStatus());
+            cmdParam.setString(7, entryAddress.getCityName());
+            cmdParam.setString(8, entryAddress.getStateName());
+            cmdParam.setString(9, entryAddress.getZipCode());
+            cmdParam.setString(10, entryAddress.getName());
+            cmdParam.setString(11, String.valueOf(entryAddress.getNumber()));
+            cmdParam.setString(12, entryAddress.getDistrict());
+            cmdParam.setString(13, entryAddress.getComplement());
+            cmdParam.setString(14, entry.getWorkingSection());
+            cmdParam.setString(15, entry.getProfession());
+            cmdParam.setString(16, entry.getObservations());
+            cmdParam.setString(17, entry.getBirthDate());
+            
+            cmdParam.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace(System.out);
+        }
+    }
+    
+    public static void insertPatient(
+        Patient entry,
+        Address entryAddress,
+        JComboBox cbPrefDoctor
+    ) {
+        try {
+            // verificar se existe no banco de dados e entao inserir
+            
+            // insere dados
+            conector = new ConnectionBD();
+            conexao = conector.getConexao();
+            cmdParam = conexao.prepareStatement(INSERT_EMPLOYEE_DBPATH);
+
+            cmdParam.setString(1, entry.getName());
+            cmdParam.setString(2, entry.getCPF().toString(true));                
+            cmdParam.setString(3, entry.getIDType());
+            cmdParam.setString(4, entry.getIDNumber());
+            cmdParam.setString(5, entry.getGender());
+            cmdParam.setString(6, entry.getMaritalStatus());
+            cmdParam.setString(7, entryAddress.getCityName());
+            cmdParam.setString(8, entryAddress.getStateName());
+            cmdParam.setString(9, entryAddress.getZipCode());
+            cmdParam.setString(10, entryAddress.getName());
+            cmdParam.setString(11, String.valueOf(entryAddress.getNumber()));
+            cmdParam.setString(12, entryAddress.getDistrict());
+            cmdParam.setString(13, entryAddress.getComplement());
+            cmdParam.setString(14, entry.getBloodType());
+            cmdParam.setString(15, (String) cbPrefDoctor.getSelectedItem());
+            cmdParam.setString(16, entry.getObservations());
+            cmdParam.setString(17, entry.getBirthDate());
+            
+            cmdParam.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace(System.out);
         }
     }
 }

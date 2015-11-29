@@ -1,10 +1,11 @@
 package cagehos.lib;
 
 import cagehos.exc.InvalidCPFNumberException;
-
-import java.util.Locale;
-import java.util.Date;
 import cagehos.exc.InvalidNameException;
+
+import java.util.Date;
+import java.text.DateFormat;
+import java.util.Locale;
 
 /**
  * The Person class provides methods to create and access any person information.
@@ -20,7 +21,7 @@ public class Person {
     private String idType;
     private String idNumber;
     private String maritalStatus;
-    
+
     /**
      * Returns a Person object with the given information.
      * @param name The person's name.
@@ -30,17 +31,22 @@ public class Person {
      * @throws InvalidNameException If the person's name contains any non valid character.
      * @throws InvalidCPFNumberException If the CPF number given is invalid.
      */
-    public Person(String name, String sexType, String cpf, String birth) throws InvalidNameException, InvalidCPFNumberException {
+    public Person(String name, String sexType, String cpf, String birth)
+        throws InvalidNameException, InvalidCPFNumberException
+    {
         if (!validateName(name)) {
-            throw new InvalidNameException("Letras inválidas para o nome da pessoa.");
+            throw new InvalidNameException(
+                "Letras inválidas para o nome da pessoa."
+            );
         }
         
         personName = name;
         this.sexType = sexType;
         cpfNumber  = new CPF(cpf);
         
-        Locale.setDefault(new Locale("pt", "BR"));
-        birthDate  = new Date(birth);
+        final String[] dateParts = birth.split("[^\\d+]");
+        
+        birthDate  = new Date(String.format("%s/%s/%d", dateParts[1], dateParts[0], Integer.parseInt(dateParts[2]) - 1900));
     }
     
     /**
@@ -119,7 +125,7 @@ public class Person {
      * @return Returns the Person object birth date.
      */
     public String getBirthDate() {
-        return String.format("%02d/%02d/%04d", birthDate.getDay(), birthDate.getMonth(), birthDate.getYear());
+        return String.format("%02d/%02d/%04d", birthDate.getDate(), birthDate.getMonth()+1, birthDate.getYear() + 1900);
     }
     
     /**
@@ -168,14 +174,5 @@ public class Person {
      */
     public String getMaritalStatus() {
         return maritalStatus;
-    }
-    
-    /**
-     * Returns a string representation of the Person's object data.
-     * @return Returns a string representation of the Person object. 
-     */
-    @Override
-    public String toString() {
-        return String.format("[Person] [Name: %s] [CPF: %s] [BirthDate: %s]", personName, cpfNumber.toString(true), birthDate.toString());
     }
 }
