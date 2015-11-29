@@ -46,11 +46,7 @@ public class InterfaceBackbone {
     private static PreparedStatement cmdParam = null;
     
     
-    public static void validateNameField(
-            String name,
-            JTextField field,
-            boolean mandatory
-    ) {
+    public static void validateNameField( String name, JTextField field, boolean mandatory ) {
         boolean gotError = false;
         
         if (field.isEditable()) {
@@ -78,11 +74,7 @@ public class InterfaceBackbone {
         }
     }
     
-    public static void validateNumberField(
-        String name,
-        JTextField field,
-        boolean mandatory
-    ) {
+    public static void validateNumberField(String name, JTextField field, boolean mandatory ) {
         boolean gotError = false;
         
         if (field.isEditable()) {
@@ -110,20 +102,12 @@ public class InterfaceBackbone {
         }
     }
     
-    public static void validateAddressField(
-        String name,
-        JTextField field,
-        boolean mandatory
-    ) {
+    public static void validateAddressField( String name, JTextField field, boolean mandatory ) {
         boolean gotError = false;
         
         if (field.isEditable()) {
             try {
-                FieldValidator verifier = new FieldValidator(
-                    name,
-                    field,
-                    mandatory
-                );
+                FieldValidator verifier = new FieldValidator( name, field, mandatory );
 
                 verifier.isValidAsAddress();
             } catch (InvalidFieldException e) {
@@ -142,29 +126,16 @@ public class InterfaceBackbone {
         }
     }
     
-    public static void validateAddressComplementField(
-        String name,
-        JTextField field,
-        boolean mandatory
-    ) {
+    public static void validateAddressComplementField( String name, JTextField field, boolean mandatory ) {
         boolean gotError = false;
         
         if (field.isEditable()) {
             try {
-                FieldValidator verifier = new FieldValidator(
-                    name,
-                    field,
-                    mandatory
-                );
+                FieldValidator verifier = new FieldValidator(name, field, mandatory);
 
                 verifier.isValidAsAddressComplement();
             } catch (InvalidFieldException e) {
-                JOptionPane.showMessageDialog(null,
-                    e.getMessage(),
-                    "",
-                    JOptionPane.ERROR_MESSAGE
-                );
-
+                JOptionPane.showMessageDialog(null, e.getMessage(), "", JOptionPane.ERROR_MESSAGE );
                 gotError = true;
             } finally {
                 if (gotError) {
@@ -174,19 +145,13 @@ public class InterfaceBackbone {
         }
     }
     
-    public static void searchQuery(
-        JTable tableSearchResults,
-        JRadioButton rbDoctor,
-        JRadioButton rbEmployee,
-        JTextField nameFilter,
-        JTextField cpfFilter
-    ) {
+    public static void searchQuery(JTable tableSearchResults, JRadioButton rbDoctor, JRadioButton rbEmployee, JTextField nameFilter, JTextField cpfFilter) {
          String tipo = "paciente";
         
         if (rbDoctor.isSelected()) {
             tipo = "medico";
         } else if (rbEmployee.isSelected()) {
-            tipo = "empregado";
+            tipo = "empregado";              
         }
 
         String search = String.format(
@@ -218,10 +183,7 @@ public class InterfaceBackbone {
                     resultadoConsulta.getString("cpf"),
                 };
                 
-                if (((name.contains(vector[0].toLowerCase()) ||
-                        vector[0].toLowerCase().contains(name) ||
-                        name.length() == 0)) &&
-                        (!mustCompareCPF || cpf.equals(vector[1]))) {
+                if (((name.contains(vector[0].toLowerCase()) || vector[0].toLowerCase().contains(name) || name.length() == 0)) && (!mustCompareCPF || cpf.equals(vector[1]))) {
                     lista.add(vector);
                 }
             }
@@ -229,7 +191,7 @@ public class InterfaceBackbone {
             Iterator it = lista.iterator();
             
             DefaultTableModel dtm = (DefaultTableModel)
-                tableSearchResults.getModel();
+            tableSearchResults.getModel();
             dtm.setRowCount(lista.size());
             tableSearchResults.setModel(dtm);
             
@@ -256,8 +218,7 @@ public class InterfaceBackbone {
     ) {
         if (evt.getClickCount() == 1) {
             final int mousePositionY = evt.getPoint().y;
-            final int rowTotalHeight = (tableSearchResults.getRowHeight() +
-                    tableSearchResults.getRowMargin());
+            final int rowTotalHeight = (tableSearchResults.getRowHeight() + tableSearchResults.getRowMargin());
             final int rowIndex = mousePositionY / rowTotalHeight;
             
             Object userEntry = tableSearchResults.getModel().getValueAt(
@@ -317,32 +278,39 @@ public class InterfaceBackbone {
     
     public static void insertDoctor(Doctor entry, Address entryAddress) {
         try {
-            // verificar se existe no banco de dados e entao inserir
-            
-            // insere dados
             conector = new ConnectionBD();
             conexao = conector.getConexao();
-            cmdParam = conexao.prepareStatement(INSERT_DOCTOR_DBPATH);
-
-            cmdParam.setString(1, entry.getName());
-            cmdParam.setString(2, entry.getCPF().toString(true));                
-            cmdParam.setString(3, entry.getIDType());
-            cmdParam.setString(4, entry.getIDNumber());
-            cmdParam.setString(5, entry.getGender());
-            cmdParam.setString(6, entry.getMaritalStatus());
-            cmdParam.setString(7, entryAddress.getCityName());
-            cmdParam.setString(8, entryAddress.getStateName());
-            cmdParam.setString(9, entryAddress.getZipCode());
-            cmdParam.setString(10, entryAddress.getName());
-            cmdParam.setString(11, String.valueOf(entryAddress.getNumber()));
-            cmdParam.setString(12, entryAddress.getDistrict());
-            cmdParam.setString(13, entryAddress.getComplement());
-            cmdParam.setString(14, String.valueOf(entry.getCRM()));
-            cmdParam.setString(15, entry.getTreatment());
-            cmdParam.setString(16, entry.getObservations());
-            cmdParam.setString(17, entry.getBirthDate());
             
-            cmdParam.executeUpdate();
+            String cpfSearch = entry.getCPF().toString(true),            
+            searchBd = "SELECT cpf FROM medico WHERE cpf = '" + cpfSearch + "'";
+            PreparedStatement searchParam = conexao.prepareStatement(searchBd);
+            ResultSet resultadoConsulta = searchParam.executeQuery();
+            
+            if(!resultadoConsulta.next()) {            
+                conector = new ConnectionBD();
+                conexao = conector.getConexao();
+                cmdParam = conexao.prepareStatement(INSERT_DOCTOR_DBPATH);
+
+                cmdParam.setString(1, entry.getName());
+                cmdParam.setString(2, entry.getCPF().toString(true));                
+                cmdParam.setString(3, entry.getIDType());
+                cmdParam.setString(4, entry.getIDNumber());
+                cmdParam.setString(5, entry.getGender());
+                cmdParam.setString(6, entry.getMaritalStatus());
+                cmdParam.setString(7, entryAddress.getCityName());
+                cmdParam.setString(8, entryAddress.getStateName());
+                cmdParam.setString(9, entryAddress.getZipCode());
+                cmdParam.setString(10, entryAddress.getName());
+                cmdParam.setString(11, String.valueOf(entryAddress.getNumber()));
+                cmdParam.setString(12, entryAddress.getDistrict());
+                cmdParam.setString(13, entryAddress.getComplement());
+                cmdParam.setString(14, String.valueOf(entry.getCRM()));
+                cmdParam.setString(15, entry.getTreatment());
+                cmdParam.setString(16, entry.getObservations());
+                cmdParam.setString(17, entry.getBirthDate());
+
+                cmdParam.executeUpdate();
+            }
         } catch (SQLException e) {
             e.printStackTrace(System.out);
         }
@@ -350,69 +318,79 @@ public class InterfaceBackbone {
     
     public static void insertEmployee(Employee entry, Address entryAddress) {
         try {
-            // verificar se existe no banco de dados e entao inserir
-            
-            // insere dados
             conector = new ConnectionBD();
             conexao = conector.getConexao();
-            cmdParam = conexao.prepareStatement(INSERT_EMPLOYEE_DBPATH);
-
-            cmdParam.setString(1, entry.getName());
-            cmdParam.setString(2, entry.getCPF().toString(true));                
-            cmdParam.setString(3, entry.getIDType());
-            cmdParam.setString(4, entry.getIDNumber());
-            cmdParam.setString(5, entry.getGender());
-            cmdParam.setString(6, entry.getMaritalStatus());
-            cmdParam.setString(7, entryAddress.getCityName());
-            cmdParam.setString(8, entryAddress.getStateName());
-            cmdParam.setString(9, entryAddress.getZipCode());
-            cmdParam.setString(10, entryAddress.getName());
-            cmdParam.setString(11, String.valueOf(entryAddress.getNumber()));
-            cmdParam.setString(12, entryAddress.getDistrict());
-            cmdParam.setString(13, entryAddress.getComplement());
-            cmdParam.setString(14, entry.getWorkingSection());
-            cmdParam.setString(15, entry.getProfession());
-            cmdParam.setString(16, entry.getObservations());
-            cmdParam.setString(17, entry.getBirthDate());
             
-            cmdParam.executeUpdate();
+            String cpfSearch = entry.getCPF().toString(true);            
+            String searchBd = "SELECT cpf FROM empregado WHERE cpf = '" + cpfSearch + "'";                      
+            PreparedStatement searchParam = conexao.prepareStatement(searchBd);
+            ResultSet resultadoConsulta = searchParam.executeQuery();
+            
+            if(!resultadoConsulta.next()) {
+                conector = new ConnectionBD();
+                conexao = conector.getConexao();
+                cmdParam = conexao.prepareStatement(INSERT_EMPLOYEE_DBPATH);
+
+                cmdParam.setString(1, entry.getName());
+                cmdParam.setString(2, entry.getCPF().toString(true));                
+                cmdParam.setString(3, entry.getIDType());
+                cmdParam.setString(4, entry.getIDNumber());
+                cmdParam.setString(5, entry.getGender());
+                cmdParam.setString(6, entry.getMaritalStatus());
+                cmdParam.setString(7, entryAddress.getCityName());
+                cmdParam.setString(8, entryAddress.getStateName());
+                cmdParam.setString(9, entryAddress.getZipCode());
+                cmdParam.setString(10, entryAddress.getName());
+                cmdParam.setString(11, String.valueOf(entryAddress.getNumber()));
+                cmdParam.setString(12, entryAddress.getDistrict());
+                cmdParam.setString(13, entryAddress.getComplement());
+                cmdParam.setString(14, entry.getWorkingSection());
+                cmdParam.setString(15, entry.getProfession());
+                cmdParam.setString(16, entry.getObservations());
+                cmdParam.setString(17, entry.getBirthDate());
+
+                cmdParam.executeUpdate();
+            }
         } catch (SQLException e) {
             e.printStackTrace(System.out);
         }
     }
     
-    public static void insertPatient(
-        Patient entry,
-        Address entryAddress,
-        JComboBox cbPrefDoctor
-    ) {
+    public static void insertPatient(Patient entry, Address entryAddress, JComboBox cbPrefDoctor) {
         try {
-            // verificar se existe no banco de dados e entao inserir
-            
-            // insere dados
             conector = new ConnectionBD();
             conexao = conector.getConexao();
-            cmdParam = conexao.prepareStatement(INSERT_EMPLOYEE_DBPATH);
-
-            cmdParam.setString(1, entry.getName());
-            cmdParam.setString(2, entry.getCPF().toString(true));                
-            cmdParam.setString(3, entry.getIDType());
-            cmdParam.setString(4, entry.getIDNumber());
-            cmdParam.setString(5, entry.getGender());
-            cmdParam.setString(6, entry.getMaritalStatus());
-            cmdParam.setString(7, entryAddress.getCityName());
-            cmdParam.setString(8, entryAddress.getStateName());
-            cmdParam.setString(9, entryAddress.getZipCode());
-            cmdParam.setString(10, entryAddress.getName());
-            cmdParam.setString(11, String.valueOf(entryAddress.getNumber()));
-            cmdParam.setString(12, entryAddress.getDistrict());
-            cmdParam.setString(13, entryAddress.getComplement());
-            cmdParam.setString(14, entry.getBloodType());
-            cmdParam.setString(15, (String) cbPrefDoctor.getSelectedItem());
-            cmdParam.setString(16, entry.getObservations());
-            cmdParam.setString(17, entry.getBirthDate());
             
-            cmdParam.executeUpdate();
+            String cpfSearch = entry.getCPF().toString(true);            
+            String searchBd = "SELECT cpf FROM paciente WHERE cpf = '" + cpfSearch + "'";                      
+            PreparedStatement searchParam = conexao.prepareStatement(searchBd);
+            ResultSet resultadoConsulta = searchParam.executeQuery();
+            
+             if(!resultadoConsulta.next()) {
+                conector = new ConnectionBD();
+                conexao = conector.getConexao();
+                cmdParam = conexao.prepareStatement(INSERT_PATIENT_DBPATH);
+
+                cmdParam.setString(1, entry.getName());
+                cmdParam.setString(2, entry.getCPF().toString(true));                
+                cmdParam.setString(3, entry.getIDType());
+                cmdParam.setString(4, entry.getIDNumber());
+                cmdParam.setString(5, entry.getGender());
+                cmdParam.setString(6, entry.getMaritalStatus());
+                cmdParam.setString(7, entryAddress.getCityName());
+                cmdParam.setString(8, entryAddress.getStateName());
+                cmdParam.setString(9, entryAddress.getZipCode());
+                cmdParam.setString(10, entryAddress.getName());
+                cmdParam.setString(11, String.valueOf(entryAddress.getNumber()));
+                cmdParam.setString(12, entryAddress.getDistrict());
+                cmdParam.setString(13, entryAddress.getComplement());
+                cmdParam.setString(14, entry.getBloodType());
+                cmdParam.setString(15, (String) cbPrefDoctor.getSelectedItem());
+                cmdParam.setString(16, entry.getObservations());
+                cmdParam.setString(17, entry.getBirthDate());
+
+                cmdParam.executeUpdate();
+             }
         } catch (SQLException e) {
             e.printStackTrace(System.out);
         }
