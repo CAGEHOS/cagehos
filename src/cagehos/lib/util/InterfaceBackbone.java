@@ -14,8 +14,8 @@ import java.sql.SQLException;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-import javax.swing.JComboBox;
 
+import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import javax.swing.JRadioButton;
 import javax.swing.JTable;
@@ -146,7 +146,7 @@ public class InterfaceBackbone {
     }
     
     public static void searchQuery(JTable tableSearchResults, JRadioButton rbDoctor, JRadioButton rbEmployee, JTextField nameFilter, JTextField cpfFilter) {
-         String tipo = "paciente";
+        String tipo = "paciente";
         
         if (rbDoctor.isSelected()) {
             tipo = "medico";
@@ -205,7 +205,7 @@ public class InterfaceBackbone {
                 }
             }
         } catch (SQLException e){
-             e.printStackTrace(System.out);
+            e.printStackTrace(System.out);
         }
     }
     
@@ -292,7 +292,7 @@ public class InterfaceBackbone {
                 cmdParam = conexao.prepareStatement(INSERT_DOCTOR_DBPATH);
 
                 cmdParam.setString(1, entry.getName());
-                cmdParam.setString(2, entry.getCPF().toString(true));                
+                cmdParam.setString(2, entry.getCPF().toString(true));
                 cmdParam.setString(3, entry.getIDType());
                 cmdParam.setString(4, entry.getIDNumber());
                 cmdParam.setString(5, entry.getGender());
@@ -366,7 +366,7 @@ public class InterfaceBackbone {
             PreparedStatement searchParam = conexao.prepareStatement(searchBd);
             ResultSet resultadoConsulta = searchParam.executeQuery();
             
-             if(!resultadoConsulta.next()) {
+            if(!resultadoConsulta.next()) {
                 conector = new ConnectionBD();
                 conexao = conector.getConexao();
                 cmdParam = conexao.prepareStatement(INSERT_PATIENT_DBPATH);
@@ -390,7 +390,7 @@ public class InterfaceBackbone {
                 cmdParam.setString(17, entry.getBirthDate());
 
                 cmdParam.executeUpdate();
-             }
+            }
         } catch (SQLException e) {
             e.printStackTrace(System.out);
         }
