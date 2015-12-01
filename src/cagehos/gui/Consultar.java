@@ -219,6 +219,8 @@ public class Consultar extends javax.swing.JFrame {
             tfSearchName,
             tfSearchCPF
         );
+        
+        tfSearchCPF.setText("");
     }//GEN-LAST:event_btSearchQueryActionPerformed
 
     private void tableSearchResultsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableSearchResultsMouseClicked
